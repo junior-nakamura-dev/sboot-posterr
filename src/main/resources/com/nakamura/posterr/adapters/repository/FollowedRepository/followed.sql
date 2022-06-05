@@ -1,0 +1,1 @@
+select * from followed_entity where user_id = :userId;

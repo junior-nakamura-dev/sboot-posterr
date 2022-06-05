@@ -1,5 +1,6 @@
 package com.nakamura.posterr.adapters.repository.config;
 
+import com.nakamura.posterr.adapters.repository.FollowedRepository;
 import com.nakamura.posterr.adapters.repository.FollowingRepository;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.postgres.PostgresPlugin;
@@ -41,6 +42,11 @@ public class RepositoryConfiguration {
     @Bean
     public FollowingRepository followingRepository(Jdbi jdbi) {
         return jdbi.onDemand(FollowingRepository.class);
+    }
+
+    @Bean
+    public FollowedRepository followedRepository(Jdbi jdbi) {
+        return jdbi.onDemand(FollowedRepository.class);
     }
 
 }
