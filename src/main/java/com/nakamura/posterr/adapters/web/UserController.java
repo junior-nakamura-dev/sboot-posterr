@@ -3,10 +3,12 @@ package com.nakamura.posterr.adapters.web;
 import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.adapters.web.dto.FollowedUserOutput;
 import com.nakamura.posterr.adapters.web.dto.FollowingUserOutput;
+import com.nakamura.posterr.application.exception.CantFollowYourselfException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -42,13 +44,17 @@ public class UserController {
 
     @PostMapping(path = "/follow")
     public ResponseEntity followUser(@RequestBody FollowUserInput followUserInput) {
-        final var userId = SecurityContextMock.userId;
-        log.info("POST - /v1/user/follow - Start process to follow user");
+        try {
+            final var userId = SecurityContextMock.userId;
+            log.info("POST - /v1/user/follow - Start process to follow user");
 
-        userHandler.followUser(userId, followUserInput);
+            userHandler.followUser(userId, followUserInput);
 
-        log.info("POST - /v1/user/follow - Sucess - 204", userId);
-        return ResponseEntity.noContent().build();
+            log.info("POST - /v1/user/follow - Sucess - 204", userId);
+            return ResponseEntity.noContent().build();
+        } catch (CantFollowYourselfException businessException) {
+            throw new ResponseStatusException(businessException.getExceptionStatusCode(), businessException.getExceptionDescription());
+        }
     }
 
 }
