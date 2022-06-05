@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nakamura.posterr.TestMocks;
 import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.application.UserService;
+import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
+import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
 import com.nakamura.posterr.application.ports.out.UserPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,12 +19,10 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -120,6 +120,44 @@ class UserControllerTest {
                 .accept(APPLICATION_JSON)
                 .contentType(APPLICATION_JSON_VALUE)
                 .content(body))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @DisplayName("Given an userFollowingId when userId wants follow an user already followed then return error")
+    @Test
+    void followUserAlreadyFollowedError() throws Exception {
+        willThrow(new AlreadyFollowThisUserException()).given(userPortMock).followUser(TestMocks.followingUserMock());
+
+        final var body = objectMapper.writeValueAsString(new FollowUserInput(2L));
+
+        mockMvc.perform(post("/v1/user/follow")
+                .accept(APPLICATION_JSON)
+                .contentType(APPLICATION_JSON_VALUE)
+                .content(body))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @DisplayName("Given an userFollowingId when userId wants unfollow him then return success")
+    @Test
+    void unfollowUserSuccess() throws Exception {
+
+        willDoNothing().given(userPortMock).unfollowUser(TestMocks.followingUserMock());
+
+        mockMvc.perform(delete("/v1/user/unfollow/2")
+                .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("Given an userFollowingId when userId wants unfollow him but already unfollowed then return error")
+    @Test
+    void unfollowUserAlreadyUnfollowedError() throws Exception {
+        willThrow(new AlreadyUnfollowThisUserException()).given(userPortMock).unfollowUser(TestMocks.followingUserMock());
+
+        mockMvc.perform(delete("/v1/user/unfollow/2")
+                .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
