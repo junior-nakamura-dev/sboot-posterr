@@ -1,0 +1,25 @@
+package com.nakamura.posterr.adapters.repository.entity;
+
+import com.nakamura.posterr.application.domain.FollowingUser;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class FollowingEntity {
+
+    private Long userId;
+
+    private Long userFollowingId;
+
+    public FollowingUser toDomain() {
+        return FollowingUser
+                .builder()
+                .userId(this.userId)
+                .userFollowingId(this.userFollowingId)
+                .build();
+    }
+
+}
