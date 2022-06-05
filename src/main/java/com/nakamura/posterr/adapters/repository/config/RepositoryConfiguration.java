@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -31,8 +32,9 @@ public class RepositoryConfiguration {
 
     @Bean
     public Jdbi jdbi(DataSource dataSource) {
+        final TransactionAwareDataSourceProxy proxy = new TransactionAwareDataSourceProxy(dataSource);
 
-        final var jdbi = Jdbi.create(dataSource)
+        final var jdbi = Jdbi.create(proxy)
                 .installPlugin(new SqlObjectPlugin())
                 .installPlugin(new PostgresPlugin());
         return jdbi;

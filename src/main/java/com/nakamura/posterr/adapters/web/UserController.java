@@ -3,6 +3,8 @@ package com.nakamura.posterr.adapters.web;
 import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.adapters.web.dto.FollowedUserOutput;
 import com.nakamura.posterr.adapters.web.dto.FollowingUserOutput;
+import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
+import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
 import com.nakamura.posterr.application.exception.CantFollowYourselfException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +54,22 @@ public class UserController {
 
             log.info("POST - /v1/user/follow - Sucess - 204", userId);
             return ResponseEntity.noContent().build();
-        } catch (CantFollowYourselfException businessException) {
+        } catch (CantFollowYourselfException | AlreadyFollowThisUserException businessException) {
+            throw new ResponseStatusException(businessException.getExceptionStatusCode(), businessException.getExceptionDescription());
+        }
+    }
+
+    @DeleteMapping(path = "/unfollow/{userFollowedId}")
+    public ResponseEntity unfollowUser(@PathVariable Long userFollowedId) {
+        try {
+            final var userId = SecurityContextMock.userId;
+            log.info("DELETE - /v1/user/unfollow - Start process to follow user");
+
+            userHandler.unfollowUser(userId, userFollowedId);
+
+            log.info("POST - /v1/user/follow - Sucess - 204", userId);
+            return ResponseEntity.noContent().build();
+        } catch (AlreadyUnfollowThisUserException businessException) {
             throw new ResponseStatusException(businessException.getExceptionStatusCode(), businessException.getExceptionDescription());
         }
     }

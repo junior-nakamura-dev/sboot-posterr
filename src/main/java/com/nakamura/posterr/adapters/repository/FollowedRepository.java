@@ -19,4 +19,7 @@ public interface FollowedRepository {
     @SqlUpdate
     void addFollowed(@BindBean FollowedEntity followedEntity);
 
+    @SqlUpdate
+    void removeFollowed(@BindBean FollowedEntity followedEntity);
+
 }

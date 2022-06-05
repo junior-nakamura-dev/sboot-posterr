@@ -4,9 +4,12 @@ import com.nakamura.posterr.adapters.repository.entity.FollowedEntity;
 import com.nakamura.posterr.adapters.repository.entity.FollowingEntity;
 import com.nakamura.posterr.application.domain.FollowedUser;
 import com.nakamura.posterr.application.domain.FollowingUser;
+import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
+import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
 import com.nakamura.posterr.application.ports.in.FollowUserUseCase;
 import com.nakamura.posterr.application.ports.in.GetAllFollowedUsersUseCase;
 import com.nakamura.posterr.application.ports.in.GetAllFollowingUsersUseCase;
+import com.nakamura.posterr.application.ports.in.UnfollowUserUseCase;
 import com.nakamura.posterr.application.ports.out.UserPort;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -19,7 +22,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
-public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedUsersUseCase, FollowUserUseCase {
+public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedUsersUseCase, FollowUserUseCase, UnfollowUserUseCase {
 
     private final UserPort userPort;
 
@@ -54,11 +57,18 @@ public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedU
     }
 
     @Override
-    public void followUser(FollowingUser followingUser) {
-        log.info("GET - /v1/user/follow - UserService - userId {} follow the user {}", followingUser.getUserId(), followingUser.getUserFollowingId());
+    public void followUser(FollowingUser followingUser) throws AlreadyFollowThisUserException {
+        log.info("POST - /v1/user/follow - UserService - userId {} follow the user {}", followingUser.getUserId(), followingUser.getUserFollowingId());
         userPort.followUser(followingUser);
 
-        log.info("GET - /v1/user/follow - UserService - Sucess to follow an user");
+        log.info("POST - /v1/user/follow - UserService - Sucess to follow an user");
     }
 
+    @Override
+    public void unfollowUser(FollowingUser followingUser) throws AlreadyUnfollowThisUserException {
+        log.info("DELETE - /v1/user/follow - UserService - userId {} unfollow the user {}", followingUser.getUserId(), followingUser.getUserFollowingId());
+        userPort.unfollowUser(followingUser);
+
+        log.info("DELETE - /v1/user/follow - UserService - Sucess to unfollow an user");
+    }
 }

@@ -9,6 +9,7 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
 import java.util.List;
+import java.util.Optional;
 
 @UseClasspathSqlLocator
 public interface FollowingRepository {
@@ -17,7 +18,14 @@ public interface FollowingRepository {
     @SqlQuery
     List<FollowingEntity> following(Long userId);
 
+    @RegisterBeanMapper(FollowingEntity.class)
+    @SqlQuery
+    Optional<FollowingEntity> isFollowing(Long userId, Long userFollowingId);
+
     @SqlUpdate
     void addFollowing(@BindBean FollowingEntity followingEntity);
+
+    @SqlUpdate
+    void removeFollowing(@BindBean FollowingEntity followingEntity);
 
 }
