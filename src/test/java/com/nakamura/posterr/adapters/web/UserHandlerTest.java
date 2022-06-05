@@ -1,6 +1,7 @@
 package com.nakamura.posterr.adapters.web;
 
 import com.nakamura.posterr.TestMocks;
+import com.nakamura.posterr.application.ports.in.GetAllFollowedUsersUseCase;
 import com.nakamura.posterr.application.ports.in.GetAllFollowingUsersUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,9 @@ class UserHandlerTest {
     @Mock
     private GetAllFollowingUsersUseCase getAllFollowingUsersUseCaseMock;
 
+    @Mock
+    private GetAllFollowedUsersUseCase getAllFollowedUsersUseCaseMock;
+
     @InjectMocks
     private UserHandler userHandler;
 
@@ -34,6 +38,19 @@ class UserHandlerTest {
         assertThat(result)
                 .hasSize(1)
                 .extracting("userId", "userFollowingId")
+                .contains(tuple(1L, 2L));
+    }
+
+    @DisplayName("Given an userId when userId has followed user then return them")
+    @Test
+    void getAllFollowedUsersWithSucess() {
+        when(getAllFollowedUsersUseCaseMock.getFollowedUsers(1L)).thenReturn(List.of(TestMocks.followedUserMock()));
+
+        var result = userHandler.getFollowedUserOutputs(1L);
+
+        assertThat(result)
+                .hasSize(1)
+                .extracting("userId", "userFollowedId")
                 .contains(tuple(1L, 2L));
     }
 

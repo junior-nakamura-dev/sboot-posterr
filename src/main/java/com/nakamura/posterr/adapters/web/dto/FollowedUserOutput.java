@@ -12,13 +12,13 @@ import lombok.Getter;
 public class FollowedUserOutput {
 
     private Long userId;
-    private Long userFollowingId;
+    private Long userFollowedId;
 
     public static FollowedUserOutput fromDomain(FollowedUser followedUser) {
         return FollowedUserOutput
                 .builder()
                 .userId(followedUser.getUserId())
-                .userFollowingId(followedUser.getUserFollowedId())
+                .userFollowedId(followedUser.getUserFollowedId())
                 .build();
     }
 

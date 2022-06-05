@@ -20,6 +20,9 @@ class UserDBAdapterTest {
     @Mock
     private FollowingRepository followingRepositoryMock;
 
+    @Mock
+    private FollowedRepository followedRepositoryMock;
+
     @InjectMocks
     private UserDBAdapter userDBAdapter;
 
@@ -33,6 +36,20 @@ class UserDBAdapterTest {
         assertThat(result)
                 .hasSize(1)
                 .extracting("userId", "userFollowingId")
+                .contains(tuple(1L, 2L));
+
+    }
+
+    @DisplayName("Given an userId when userId has followed users then return them")
+    @Test
+    void getFollowedUserById200() {
+        when(followedRepositoryMock.followed(1L)).thenReturn(List.of(TestMocks.followedEntityMock()));
+
+        var result = userDBAdapter.getFollowedUserById(1L);
+
+        assertThat(result)
+                .hasSize(1)
+                .extracting("userId", "userFollowedId")
                 .contains(tuple(1L, 2L));
 
     }

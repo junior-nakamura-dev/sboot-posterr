@@ -39,5 +39,20 @@ class UserServiceTest {
 
     }
 
+    @DisplayName("Given an userId when userId has followed user then return them")
+    @Test
+    void getFollowedUsersWithSucess() {
+
+        when(userPortMock.getFollowedUserById(1L)).thenReturn(List.of(TestMocks.followedEntityMock()));
+
+        var result = userService.getFollowedUsers(1L);
+
+        assertThat(result)
+                .hasSize(1)
+                .extracting("userId", "userFollowedId")
+                .contains(tuple(1L, 2L));
+
+    }
+
 
 }
