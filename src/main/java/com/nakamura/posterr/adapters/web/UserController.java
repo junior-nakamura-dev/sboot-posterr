@@ -9,15 +9,19 @@ import com.nakamura.posterr.application.exception.CantFollowYourselfException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @RestController
 @RequestMapping("/v1/user")
 @AllArgsConstructor
 @Slf4j
+@Validated
 public class UserController {
 
     private final UserHandler userHandler;
@@ -45,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/follow")
-    public ResponseEntity followUser(@RequestBody FollowUserInput followUserInput) {
+    public ResponseEntity followUser(@RequestBody @Valid FollowUserInput followUserInput) {
         try {
             final var userId = SecurityContextMock.userId;
             log.info("POST - /v1/user/follow - Start process to follow user");
@@ -60,7 +64,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/unfollow/{userFollowedId}")
-    public ResponseEntity unfollowUser(@PathVariable Long userFollowedId) {
+    public ResponseEntity unfollowUser(@PathVariable @NotNull Long userFollowedId) {
         try {
             final var userId = SecurityContextMock.userId;
             log.info("DELETE - /v1/user/unfollow - Start process to follow user");

@@ -6,12 +6,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
+
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
 public class FollowingUserOutput {
 
+    @NotNull
     private Long userId;
+
+    @NotNull
     private Long userFollowingId;
 
     public static FollowingUserOutput fromDomain(FollowingUser followingUser) {
