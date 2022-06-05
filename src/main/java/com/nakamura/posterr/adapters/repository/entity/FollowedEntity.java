@@ -23,4 +23,13 @@ public class FollowedEntity {
                 .userFollowedId(this.userFollowedId)
                 .build();
     }
+
+    public static FollowedEntity fromDomain(FollowedUser followedUser) {
+        return FollowedEntity
+                .builder()
+                .userId(followedUser.getUserId())
+                .userFollowedId(followedUser.getUserFollowedId())
+                .build();
+    }
+
 }

@@ -2,9 +2,11 @@ package com.nakamura.posterr.adapters.repository;
 
 import com.nakamura.posterr.adapters.repository.entity.FollowedEntity;
 import com.nakamura.posterr.adapters.repository.entity.FollowingEntity;
+import com.nakamura.posterr.application.domain.FollowingUser;
 import com.nakamura.posterr.application.ports.out.UserPort;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jdbi.v3.sqlobject.transaction.Transaction;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,6 +36,22 @@ public class UserDBAdapter implements UserPort {
         log.info("GET - /v1/user/followed - UserDBAdapter - Sucess to return followingUser from FollowedRepository");
 
         return followedEntities;
+    }
+
+    @Transaction
+    @Override
+    public void followUser(FollowingUser followingUser) {
+        log.info("GET - /v1/user/follow - UserDBAdapter - userId {} follow the user {}", followingUser.getUserId(), followingUser.getUserFollowingId());
+
+        followingRepository.addFollowing(FollowingEntity.fromDomain(followingUser));
+        log.info("GET - /v1/user/follow - UserDBAdapter - Sucess followingRepository");
+
+        var followedUser = followingUser.toFollowedUser();
+        log.info("GET - /v1/user/follow - UserDBAdapter - Sucess mapping to FollowedUser");
+
+        followedRepository.addFollowed(FollowedEntity.fromDomain(followedUser));
+        log.info("GET - /v1/user/follow - UserDBAdapter - Sucess followedRepository");
+        log.info("GET - /v1/user/follow - UserDBAdapter - Sucess to follow an user");
     }
 
 }

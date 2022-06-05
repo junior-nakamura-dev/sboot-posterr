@@ -4,6 +4,7 @@ import com.nakamura.posterr.adapters.repository.entity.FollowedEntity;
 import com.nakamura.posterr.adapters.repository.entity.FollowingEntity;
 import com.nakamura.posterr.application.domain.FollowedUser;
 import com.nakamura.posterr.application.domain.FollowingUser;
+import com.nakamura.posterr.application.ports.in.FollowUserUseCase;
 import com.nakamura.posterr.application.ports.in.GetAllFollowedUsersUseCase;
 import com.nakamura.posterr.application.ports.in.GetAllFollowingUsersUseCase;
 import com.nakamura.posterr.application.ports.out.UserPort;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
-public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedUsersUseCase {
+public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedUsersUseCase, FollowUserUseCase {
 
     private final UserPort userPort;
 
@@ -50,6 +51,14 @@ public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedU
 
         log.info("GET - /v1/user/followed - UserService - Sucess to mapping to FollowedUser");
         return followedUsers;
+    }
+
+    @Override
+    public void followUser(FollowingUser followingUser) {
+        log.info("GET - /v1/user/follow - UserService - userId {} follow the user {}", followingUser.getUserId(), followingUser.getUserFollowingId());
+        userPort.followUser(followingUser);
+
+        log.info("GET - /v1/user/follow - UserService - Sucess to follow an user");
     }
 
 }

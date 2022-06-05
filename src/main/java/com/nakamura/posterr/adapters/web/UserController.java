@@ -1,13 +1,12 @@
 package com.nakamura.posterr.adapters.web;
 
+import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.adapters.web.dto.FollowedUserOutput;
 import com.nakamura.posterr.adapters.web.dto.FollowingUserOutput;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,6 +38,17 @@ public class UserController {
 
         log.info("GET - /v1/user/followed - Sucess - 200", userId);
         return ResponseEntity.ok(result);
+    }
+
+    @PostMapping(path = "/follow")
+    public ResponseEntity followUser(@RequestBody FollowUserInput followUserInput) {
+        final var userId = SecurityContextMock.userId;
+        log.info("POST - /v1/user/follow - Start process to follow user");
+
+        userHandler.followUser(userId, followUserInput);
+
+        log.info("POST - /v1/user/follow - Sucess - 204", userId);
+        return ResponseEntity.noContent().build();
     }
 
 }

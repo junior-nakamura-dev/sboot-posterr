@@ -24,4 +24,12 @@ public class FollowingEntity {
                 .build();
     }
 
+    public static FollowingEntity fromDomain(FollowingUser followingUser) {
+        return FollowingEntity
+                .builder()
+                .userId(followingUser.getUserId())
+                .userFollowingId(followingUser.getUserFollowingId())
+                .build();
+    }
+
 }
