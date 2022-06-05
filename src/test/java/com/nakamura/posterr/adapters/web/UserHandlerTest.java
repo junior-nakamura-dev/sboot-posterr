@@ -1,8 +1,9 @@
 package com.nakamura.posterr.adapters.web;
 
 import com.nakamura.posterr.TestMocks;
-import com.nakamura.posterr.application.ports.in.GetAllFollowedUsersUseCase;
-import com.nakamura.posterr.application.ports.in.GetAllFollowingUsersUseCase;
+import com.nakamura.posterr.adapters.web.handler.UserHandler;
+import com.nakamura.posterr.application.ports.in.user.GetAllFollowedUsersUseCase;
+import com.nakamura.posterr.application.ports.in.user.GetAllFollowingUsersUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

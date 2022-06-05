@@ -3,6 +3,7 @@ package com.nakamura.posterr.adapters.web;
 import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.adapters.web.dto.FollowedUserOutput;
 import com.nakamura.posterr.adapters.web.dto.FollowingUserOutput;
+import com.nakamura.posterr.adapters.web.handler.UserHandler;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
 import com.nakamura.posterr.application.exception.CantFollowYourselfException;

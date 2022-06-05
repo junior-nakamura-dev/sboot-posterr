@@ -1,4 +1,4 @@
-package com.nakamura.posterr.adapters.web;
+package com.nakamura.posterr.adapters.web.handler;
 
 import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.adapters.web.dto.FollowedUserOutput;
@@ -7,10 +7,10 @@ import com.nakamura.posterr.application.domain.FollowingUser;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
 import com.nakamura.posterr.application.exception.CantFollowYourselfException;
-import com.nakamura.posterr.application.ports.in.FollowUserUseCase;
-import com.nakamura.posterr.application.ports.in.GetAllFollowedUsersUseCase;
-import com.nakamura.posterr.application.ports.in.GetAllFollowingUsersUseCase;
-import com.nakamura.posterr.application.ports.in.UnfollowUserUseCase;
+import com.nakamura.posterr.application.ports.in.user.FollowUserUseCase;
+import com.nakamura.posterr.application.ports.in.user.GetAllFollowedUsersUseCase;
+import com.nakamura.posterr.application.ports.in.user.GetAllFollowingUsersUseCase;
+import com.nakamura.posterr.application.ports.in.user.UnfollowUserUseCase;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +61,7 @@ public class UserHandler {
 
         return followedUserOutputs;
     }
+
     public void followUser(Long userId, FollowUserInput followUserInput) throws CantFollowYourselfException, AlreadyFollowThisUserException {
         log.info("POST - /v1/user/follow - User {} wants to follow the user {}", userId, followUserInput.getUserFollowingId());
 

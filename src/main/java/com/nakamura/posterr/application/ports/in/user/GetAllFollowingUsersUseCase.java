@@ -1,4 +1,4 @@
-package com.nakamura.posterr.application.ports.in;
+package com.nakamura.posterr.application.ports.in.user;
 
 import com.nakamura.posterr.application.domain.FollowingUser;
 
