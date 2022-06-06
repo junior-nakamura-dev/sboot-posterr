@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 @AllArgsConstructor
 @Slf4j
@@ -34,4 +37,17 @@ public class PostDBAdapter implements PostPort {
         postRepository.addPost(postEntity);
         log.info("POST - /v1/post - PostDBAdapter - Sucess postRepository");
     }
+
+    @Override
+    public List<Post> getAllPost(Long userId, int offset) {
+        log.info("GET - /v1/post - PostDBAdapter - Get all post pagination for user {} and offset {}", userId, offset);
+
+        final var postEntities = postRepository.getAllPost(offset);
+        log.info("GET - /v1/post - PostDBAdapter - Sucess to retrieve postEntites from postRepository");
+
+        final var posts = postEntities.stream().map(PostEntity::toDomain).collect(Collectors.toList());
+        log.info("GET - /v1/post - PostDBAdapter - Sucess to mapping to Post domain");
+        return posts;
+    }
+
 }

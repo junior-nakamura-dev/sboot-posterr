@@ -3,7 +3,8 @@ package com.nakamura.posterr.adapters.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nakamura.posterr.TestMocks;
 import com.nakamura.posterr.adapters.web.dto.CreatePostInput;
-import com.nakamura.posterr.application.PostService;
+import com.nakamura.posterr.application.AllPostService;
+import com.nakamura.posterr.application.domain.Post;
 import com.nakamura.posterr.application.exception.LimitRangePostDayException;
 import com.nakamura.posterr.application.ports.out.PostPort;
 import org.junit.jupiter.api.DisplayName;
@@ -14,12 +15,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.BDDMockito.willThrow;
+import java.time.OffsetDateTime;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.mockito.BDDMockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -33,12 +40,12 @@ class PostControllerTest {
     private PostPort postPortMock;
 
     @Autowired
-    private PostService service;
+    private AllPostService service;
 
     @Autowired
     private ObjectMapper objectMapper;
 
-    @DisplayName("Given an CreatePostInput when the input is valid then create a post")
+    @DisplayName("GIVEN an CreatePostInput WHEN the input is valid then create a post")
     @Test
     void createPostWithSuccess() throws Exception {
 
@@ -54,11 +61,11 @@ class PostControllerTest {
                 .andExpect(status().isNoContent());
     }
 
-    @DisplayName("Given an CreatePostInput when the input is valid then create a post above the limit range post day")
+    @DisplayName("GIVEN an CreatePostInput WHEN the input is valid then create a post above the limit range post day")
     @Test
     void errorLimitRange() throws Exception {
 
-        willThrow(new LimitRangePostDayException()).given(postPortMock).createPost(TestMocks.postMock());
+        willThrow(new LimitRangePostDayException()).given(postPortMock).createPost(any(Post.class));
 
         final var body = objectMapper.writeValueAsString(new CreatePostInput("TEST", null));
 
@@ -69,5 +76,26 @@ class PostControllerTest {
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
     }
+
+    @DisplayName("GIVEN a page number and userId WHEN User request all posts wherever post them THEN retrieve a list of post WITH sucess")
+    @Test
+    void getAllPostWithSucess() throws Exception {
+        final var offset = 5;
+        final var userId = 1L;
+        final var posts = TestMocks.postMock();
+
+        given(postPortMock.getAllPost(userId, offset)).willReturn(List.of(posts));
+
+        mockMvc.perform(get("/v1/post?page=1")
+                .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].post", is("TEST")))
+                .andExpect(jsonPath("$[0].userId", is(1)))
+                .andExpect(jsonPath("$[0].dateCreated", is(String.valueOf(OffsetDateTime.MAX))));
+    }
+
 
 }

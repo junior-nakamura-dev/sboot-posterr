@@ -8,6 +8,7 @@ import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
+import java.util.List;
 import java.util.Optional;
 
 @UseClasspathSqlLocator
@@ -20,5 +21,9 @@ public interface PostRepository {
     @SqlQuery
     @RegisterBeanMapper(PostEntity.class)
     Optional<PostEntity> getLastPost(Long userId);
+
+    @SqlQuery
+    @RegisterBeanMapper(PostEntity.class)
+    List<PostEntity> getAllPost(int offset);
 
 }

@@ -3,16 +3,19 @@ package com.nakamura.posterr.application;
 import com.nakamura.posterr.application.domain.Post;
 import com.nakamura.posterr.application.exception.LimitRangePostDayException;
 import com.nakamura.posterr.application.ports.in.post.CreatePostUseCase;
+import com.nakamura.posterr.application.ports.in.post.GetAllPostUseCase;
 import com.nakamura.posterr.application.ports.out.PostPort;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
-public class PostService implements CreatePostUseCase {
+public class AllPostService implements CreatePostUseCase, GetAllPostUseCase {
 
     private final PostPort postPort;
 
@@ -23,4 +26,13 @@ public class PostService implements CreatePostUseCase {
 
         log.info("POST - /v1/post - PostService - Sucess to post");
     }
+
+    @Override
+    public List<Post> getAllPost(Long userId, int offset) {
+        log.info("GET - /v1/post - PostService - Get all post to userId {} offset {}", userId, offset);
+        final var posts = postPort.getAllPost(userId, offset);
+        log.info("GET - /v1/post - PostService - Sucess to retrieve posts");
+        return posts;
+    }
+
 }

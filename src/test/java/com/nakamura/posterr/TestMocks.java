@@ -7,6 +7,8 @@ import com.nakamura.posterr.application.domain.FollowedUser;
 import com.nakamura.posterr.application.domain.FollowingUser;
 import com.nakamura.posterr.application.domain.Post;
 
+import java.time.OffsetDateTime;
+
 public class TestMocks {
 
     public static FollowingEntity followingEntityMock() {
@@ -46,12 +48,16 @@ public class TestMocks {
                 .builder()
                 .userId(1L)
                 .post("TEST")
+                .id(1L)
+                .dateCreated(OffsetDateTime.MAX)
                 .build();
     }
 
     public static Post postMock() {
         return Post
                 .builder()
+                .id(1L)
+                .dateCreated(OffsetDateTime.MAX)
                 .userId(1L)
                 .post("TEST")
                 .build();
