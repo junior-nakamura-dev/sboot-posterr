@@ -1,10 +1,7 @@
 package com.nakamura.posterr.adapters.repository.entity;
 
 import com.nakamura.posterr.application.domain.Post;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
@@ -12,13 +9,16 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class PostEntity {
 
+    @EqualsAndHashCode.Include
     private Long id;
     private String post;
     private Long postOriginalId;
     private Long userId;
     private OffsetDateTime dateCreated;
+    private int amountPostDay;
 
     public Post toDomain() {
         return Post
@@ -28,6 +28,7 @@ public class PostEntity {
                 .postOriginalId(this.postOriginalId)
                 .userId(this.userId)
                 .dateCreated(this.dateCreated)
+                .amountPostDay(this.amountPostDay)
                 .build();
     }
 
@@ -38,7 +39,12 @@ public class PostEntity {
                 .postOriginalId(post.getPostOriginalId())
                 .userId(post.getUserId())
                 .dateCreated(post.getDateCreated())
+                .amountPostDay(post.getAmountPostDay())
                 .build();
+    }
+
+    public void setAmountPostDay(int amountPostDay) {
+        this.amountPostDay = amountPostDay;
     }
 
 }

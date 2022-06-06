@@ -1,6 +1,7 @@
 package com.nakamura.posterr.application;
 
 import com.nakamura.posterr.TestMocks;
+import com.nakamura.posterr.application.exception.LimitRangePostDayException;
 import com.nakamura.posterr.application.ports.out.PostPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,7 @@ class PostServiceTest {
 
     @DisplayName("Create an user post with sucess")
     @Test
-    void getFollowingUsersWithSucess() {
+    void getFollowingUsersWithSucess() throws LimitRangePostDayException {
         final var post = TestMocks.postMock();
 
         doNothing().when(postPortMock).createPost(post);

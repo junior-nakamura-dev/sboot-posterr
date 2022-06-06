@@ -18,4 +18,5 @@ public class Post {
     private Long userId;
     private Long postOriginalId;
     private OffsetDateTime dateCreated;
+    private int amountPostDay;
 }

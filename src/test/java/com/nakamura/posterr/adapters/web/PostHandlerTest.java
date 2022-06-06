@@ -3,6 +3,7 @@ package com.nakamura.posterr.adapters.web;
 import com.nakamura.posterr.TestMocks;
 import com.nakamura.posterr.adapters.web.dto.CreatePostInput;
 import com.nakamura.posterr.adapters.web.handler.PostHandler;
+import com.nakamura.posterr.application.exception.LimitRangePostDayException;
 import com.nakamura.posterr.application.ports.in.post.CreatePostUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,7 @@ class PostHandlerTest {
 
     @DisplayName("Create an user post with success")
     @Test
-    void createPostWithSuccess() {
+    void createPostWithSuccess() throws LimitRangePostDayException {
         final var post = TestMocks.postMock();
         final var createPostInput = new CreatePostInput("TEST", null);
 

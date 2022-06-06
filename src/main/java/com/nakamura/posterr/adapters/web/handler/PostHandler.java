@@ -1,6 +1,7 @@
 package com.nakamura.posterr.adapters.web.handler;
 
 import com.nakamura.posterr.adapters.web.dto.CreatePostInput;
+import com.nakamura.posterr.application.exception.LimitRangePostDayException;
 import com.nakamura.posterr.application.ports.in.post.CreatePostUseCase;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ public class PostHandler {
 
     private final CreatePostUseCase createPostUseCase;
 
-    public void createPost(Long userId, CreatePostInput createPostInput) {
+    public void createPost(Long userId, CreatePostInput createPostInput) throws LimitRangePostDayException {
         log.info("POST - /v1/post - PostHandler - User {} wants create a post", userId);
 
         var post = createPostInput.toDomain(userId);

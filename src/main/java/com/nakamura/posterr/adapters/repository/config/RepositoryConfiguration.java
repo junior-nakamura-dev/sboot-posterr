@@ -34,7 +34,6 @@ public class RepositoryConfiguration {
     @Bean
     public Jdbi jdbi(DataSource dataSource) {
         final TransactionAwareDataSourceProxy proxy = new TransactionAwareDataSourceProxy(dataSource);
-
         final var jdbi = Jdbi.create(proxy)
                 .installPlugin(new SqlObjectPlugin())
                 .installPlugin(new PostgresPlugin());
