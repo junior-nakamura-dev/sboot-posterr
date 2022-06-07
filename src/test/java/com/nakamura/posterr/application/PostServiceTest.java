@@ -38,21 +38,40 @@ class PostServiceTest {
 
     }
 
-    @DisplayName("GIVEN a page number and userId WHEN User request all posts wherever post them THEN retrieve a list of post WITH sucess")
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from wherever user  THEN retrieve a list of post WITH sucess")
     @Test
     void getAllPostWhereverWhoPostThem() {
         final var post = TestMocks.postMock();
         final var userId = 1L;
         final var offset = 1;
+        final var chunk = 5;
 
-        when(postPortMock.getAllPost(userId, offset)).thenReturn(List.of(post));
+        when(postPortMock.getAllPost(userId, offset, chunk)).thenReturn(List.of(post));
 
-        final var result = postService.getAllPost(userId, offset);
+        final var result = postService.getAllPost(userId, offset, chunk);
 
         assertThat(result)
                 .hasSize(1)
-                .extracting("id", "post", "dateCreated", "userId")
-                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L));
+                .extracting("id", "post", "dateCreated", "userId", "postOriginalId")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L, null));
+    }
+
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from followed user  THEN retrieve a list of post WITH sucess")
+    @Test
+    void getAllPostFromFollowedUser() {
+        final var post = TestMocks.postMock();
+        final var userId = 1L;
+        final var offset = 1;
+        final var chunk = 5;
+
+        when(postPortMock.getAllPostFromUserFollowed(userId, offset, chunk)).thenReturn(List.of(post));
+
+        final var result = postService.getAllPostFromUserFollowed(userId, offset, chunk);
+
+        assertThat(result)
+                .hasSize(1)
+                .extracting("id", "post", "dateCreated", "userId", "postOriginalId")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L, null));
     }
 
 }

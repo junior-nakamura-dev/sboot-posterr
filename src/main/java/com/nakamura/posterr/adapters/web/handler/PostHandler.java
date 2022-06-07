@@ -36,11 +36,22 @@ public class PostHandler {
         log.info("POST - /v1/post - PostHandler - Sucess to follow an user in CreatePostUseCase");
     }
 
-    public List<PostOutput> getPosts(Long userId, int page) throws LimitRangePostDayException {
-        log.info("GET - /v1/post - PostHandler - Get all post to user {} page {} ", userId, page);
+    public List<PostOutput> getPosts(Long userId, int page, int chunk, boolean seeingAll) {
+        log.info("GET - /v1/post - PostHandler - Get all post to user {} page {} chunk {} seeingAll {}", userId, page, chunk, seeingAll);
 
-        var posts = getAllPostUseCase.getAllPost(userId, (page * OFFSET_RANGE));
+        var posts = getAllPostUseCase.getAllPost(userId, (page * OFFSET_RANGE), chunk);
         log.info("GET - /v1/post - PostHandler - Sucess to retrieve posts from getAllPostUseCase");
+
+        var postsOutput = posts.stream().map(PostOutput::fromDomain).collect(Collectors.toList());
+        log.info("GET - /v1/post - PostHandler - Sucess to mapping to PostOutput");
+        return postsOutput;
+    }
+
+    public List<PostOutput> getPosts(Long userId, int page, int chunk) {
+        log.info("GET - /v1/post - PostHandler - Get post to user {} from user followed page {} chunk {} ", userId, page, chunk);
+
+        var posts = getAllPostUseCase.getAllPostFromUserFollowed(userId, (page * OFFSET_RANGE), chunk);
+        log.info("GET - /v1/post - PostHandler - Sucess to retrieve posts from getAllPostFromUserFollowed");
 
         var postsOutput = posts.stream().map(PostOutput::fromDomain).collect(Collectors.toList());
         log.info("GET - /v1/post - PostHandler - Sucess to mapping to PostOutput");

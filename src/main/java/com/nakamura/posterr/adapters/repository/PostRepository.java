@@ -20,10 +20,14 @@ public interface PostRepository {
 
     @SqlQuery
     @RegisterBeanMapper(PostEntity.class)
-    Optional<PostEntity> getLastPost(Long userId);
+    Optional<PostEntity> getLastPostToday(Long userId);
 
     @SqlQuery
     @RegisterBeanMapper(PostEntity.class)
-    List<PostEntity> getAllPost(int offset);
+    List<PostEntity> getAllPost(int offset, int chunk);
+
+    @SqlQuery
+    @RegisterBeanMapper(PostEntity.class)
+    List<PostEntity> getAllPostFromUserFollowed(Long userId, int offset, int chunk);
 
 }

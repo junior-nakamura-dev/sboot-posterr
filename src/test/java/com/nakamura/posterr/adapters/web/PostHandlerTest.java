@@ -51,19 +51,36 @@ class PostHandlerTest {
         postHandler.createPost(1L, createPostInput);
     }
 
-    @DisplayName("GIVEN a page number and userId WHEN User request all posts wherever post them THEN retrieve a list of post WITH sucess")
+    @DisplayName("GIVEN a page number and userId WHEN User request posts wherever post them THEN retrieve a list of post WITH sucess")
     @Test
-    void getAllPostWithSucess() throws LimitRangePostDayException {
+    void getAllPostWithSucess() {
         final var post = TestMocks.postMock();
         final var userId = 1L;
-        when(getAllPostUseCase.getAllPost(userId, OFF_SET_RANGE)).thenReturn(List.of(post));
+        final var chunk = 5;
+        when(getAllPostUseCase.getAllPost(userId, OFF_SET_RANGE, chunk)).thenReturn(List.of(post));
 
-        var result = postHandler.getPosts(userId, 1);
+        var result = postHandler.getPosts(userId, 1, chunk, true);
 
         assertThat(result)
                 .hasSize(1)
-                .extracting("id", "post", "dateCreated", "userId")
-                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L));
+                .extracting("id", "post", "dateCreated", "userId", "postOriginalId")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L, null));
+    }
+
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from user that him followed THEN retrieve a list of post WITH sucess")
+    @Test
+    void getAllPostFromUserFollowedWithSucess() {
+        final var post = TestMocks.postMock();
+        final var userId = 1L;
+        final var chunk = 5;
+        when(getAllPostUseCase.getAllPostFromUserFollowed(userId, OFF_SET_RANGE, chunk)).thenReturn(List.of(post));
+
+        var result = postHandler.getPosts(userId, 1, chunk);
+
+        assertThat(result)
+                .hasSize(1)
+                .extracting("id", "post", "dateCreated", "userId", "postOriginalId")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L, null));
     }
 
 }

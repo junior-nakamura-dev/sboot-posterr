@@ -33,7 +33,7 @@ class PostDBAdapterTest {
     @Test
     void createPost() throws LimitRangePostDayException {
         final var postEntity = TestMocks.postEntityMock();
-        when(postRepositoryMock.getLastPost(postEntity.getUserId())).thenReturn(Optional.of(PostEntity.builder().amountPostDay(1).build()));
+        when(postRepositoryMock.getLastPostToday(postEntity.getUserId())).thenReturn(Optional.of(PostEntity.builder().amountPostDay(1).build()));
 
         when(postRepositoryMock.addPost(any())).thenReturn(1L);
 
@@ -44,25 +44,43 @@ class PostDBAdapterTest {
     @Test
     void errorLimitRangeError() {
         final var postEntity = TestMocks.postEntityMock();
-        when(postRepositoryMock.getLastPost(postEntity.getUserId())).thenReturn(Optional.of(PostEntity.builder().amountPostDay(5).build()));
+        when(postRepositoryMock.getLastPostToday(postEntity.getUserId())).thenReturn(Optional.of(PostEntity.builder().amountPostDay(5).build()));
 
         assertThatThrownBy(() -> postDBAdapter.createPost(postEntity.toDomain())).isInstanceOf(LimitRangePostDayException.class);
     }
 
-    @DisplayName("GIVEN a page number and userId WHEN User request all posts wherever post them THEN retrieve a list of post WITH sucess")
+    @DisplayName("GIVEN a page number and userId WHEN User request posts wherever post them THEN retrieve a list of post WITH sucess")
     @Test
     void getAllPost() {
         final var postEntity = TestMocks.postEntityMock();
         final var offset = 5;
         final var userId = 1L;
-        when(postRepositoryMock.getAllPost(offset)).thenReturn(List.of(postEntity));
+        final var size = 5;
+        when(postRepositoryMock.getAllPost(offset, size)).thenReturn(List.of(postEntity));
 
-        final var result = postDBAdapter.getAllPost(userId, offset);
+        final var result = postDBAdapter.getAllPost(userId, offset, size);
 
         assertThat(result)
                 .hasSize(1)
                 .extracting("id", "post", "dateCreated", "userId")
                 .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L));
+    }
+
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from user followed THEN retrieve a list of post WITH sucess")
+    @Test
+    void getAllPostFromUserFollowed() {
+        final var postEntity = TestMocks.postEntityMock();
+        final var offset = 5;
+        final var userId = 1L;
+        final var chunk = 5;
+        when(postRepositoryMock.getAllPostFromUserFollowed(userId, offset, chunk)).thenReturn(List.of(postEntity));
+
+        final var result = postDBAdapter.getAllPostFromUserFollowed(userId, offset, chunk);
+
+        assertThat(result)
+                .hasSize(1)
+                .extracting("id", "post", "dateCreated", "userId", "postOriginalId")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L, null));
     }
 
 }

@@ -17,6 +17,7 @@ public class PostOutput {
     private String post;
     private OffsetDateTime dateCreated;
     private Long userId;
+    private Long postOriginalId;
 
     public static PostOutput fromDomain(Post post) {
         return PostOutput
@@ -25,6 +26,7 @@ public class PostOutput {
                 .post(post.getPost())
                 .dateCreated(post.getDateCreated())
                 .userId(post.getUserId())
+                .postOriginalId(post.getPostOriginalId())
                 .build();
     }
 

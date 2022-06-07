@@ -22,7 +22,7 @@ public class PostDBAdapter implements PostPort {
     public void createPost(Post post) throws LimitRangePostDayException {
         log.info("POST - /v1/post - PostDBAdapter - Create post for user {}", post.getUserId());
 
-        final var lastPost = postRepository.getLastPost(post.getUserId()).orElse(PostEntity.builder().amountPostDay(0).build());
+        final var lastPost = postRepository.getLastPostToday(post.getUserId()).orElse(PostEntity.builder().amountPostDay(0).build());
         final var amountPostDay = lastPost.getAmountPostDay();
 
         if (amountPostDay == 5) {
@@ -39,11 +39,23 @@ public class PostDBAdapter implements PostPort {
     }
 
     @Override
-    public List<Post> getAllPost(Long userId, int offset) {
-        log.info("GET - /v1/post - PostDBAdapter - Get all post pagination for user {} and offset {}", userId, offset);
+    public List<Post> getAllPost(Long userId, int offset, int chunk) {
+        log.info("GET - /v1/post - PostDBAdapter - Get all post pagination for user {} and offset {} and chunk {}", userId, offset, chunk);
 
-        final var postEntities = postRepository.getAllPost(offset);
-        log.info("GET - /v1/post - PostDBAdapter - Sucess to retrieve postEntites from postRepository");
+        final var postEntities = postRepository.getAllPost(offset, chunk);
+        log.info("GET - /v1/post - PostDBAdapter - Sucess to retrieve postEntites from postRepository.getAllPost");
+
+        final var posts = postEntities.stream().map(PostEntity::toDomain).collect(Collectors.toList());
+        log.info("GET - /v1/post - PostDBAdapter - Sucess to mapping to Post domain");
+        return posts;
+    }
+
+    @Override
+    public List<Post> getAllPostFromUserFollowed(Long userId, int offset, int chunk) {
+        log.info("GET - /v1/post - PostDBAdapter - Get post to userId {} from user followed user {} and offset {} and chunk {}", userId, offset, chunk);
+
+        final var postEntities = postRepository.getAllPostFromUserFollowed(userId, offset, chunk);
+        log.info("GET - /v1/post - PostDBAdapter - Sucess to retrieve postEntites from postRepository.getAllPostFromUserFollowed");
 
         final var posts = postEntities.stream().map(PostEntity::toDomain).collect(Collectors.toList());
         log.info("GET - /v1/post - PostDBAdapter - Sucess to mapping to Post domain");

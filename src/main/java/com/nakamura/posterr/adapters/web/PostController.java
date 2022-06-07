@@ -1,6 +1,7 @@
 package com.nakamura.posterr.adapters.web;
 
 import com.nakamura.posterr.adapters.web.dto.CreatePostInput;
+import com.nakamura.posterr.adapters.web.dto.PostOutput;
 import com.nakamura.posterr.adapters.web.handler.PostHandler;
 import com.nakamura.posterr.application.exception.LimitRangePostDayException;
 import lombok.AllArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/post")
@@ -37,18 +39,21 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity getPosts(@RequestParam(defaultValue = "0") int page) {
-        try {
-            final var userId = SecurityContextMock.userId;
-            log.info("GET - /v1/post - Start process to get list of posts to user");
+    public ResponseEntity getPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int chunk, @RequestParam(defaultValue = "true") boolean seeingAll) {
+        final var userId = SecurityContextMock.userId;
+        log.info("GET - /v1/post - Start process to get list of posts to user");
 
-            final var postOutputs = postHandler.getPosts(userId, page);
-
-            log.info("GET - /v1/post - Sucess - 200", userId);
-            return ResponseEntity.ok(postOutputs);
-        } catch (LimitRangePostDayException businessException) {
-            throw new ResponseStatusException(businessException.getExceptionStatusCode(), businessException.getExceptionDescription());
+       List<PostOutput> postOutputs;
+        if (seeingAll) {
+            log.info("GET - /v1/post - Choose flow to retrieve post from wherever user");
+            postOutputs = postHandler.getPosts(userId, page, chunk, true);
+        } else {
+            log.info("GET - /v1/post - Choose flow to retrieve post from user followed");
+            postOutputs = postHandler.getPosts(userId, page, chunk);
         }
+
+        log.info("GET - /v1/post - Sucess - 200", userId);
+        return ResponseEntity.ok(postOutputs);
     }
 
 }

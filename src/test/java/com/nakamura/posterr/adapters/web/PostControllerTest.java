@@ -77,16 +77,38 @@ class PostControllerTest {
                 .andExpect(status().isUnprocessableEntity());
     }
 
-    @DisplayName("GIVEN a page number and userId WHEN User request all posts wherever post them THEN retrieve a list of post WITH sucess")
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from wherever user THEN retrieve a list of post WITH sucess")
     @Test
     void getAllPostWithSucess() throws Exception {
         final var offset = 5;
+        final var size = 5;
         final var userId = 1L;
         final var posts = TestMocks.postMock();
 
-        given(postPortMock.getAllPost(userId, offset)).willReturn(List.of(posts));
+        given(postPortMock.getAllPost(userId, offset, size)).willReturn(List.of(posts));
 
-        mockMvc.perform(get("/v1/post?page=1")
+        mockMvc.perform(get("/v1/post?page=1&size=5")
+                .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].post", is("TEST")))
+                .andExpect(jsonPath("$[0].userId", is(1)))
+                .andExpect(jsonPath("$[0].dateCreated", is(String.valueOf(OffsetDateTime.MAX))));
+    }
+
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from user followed THEN retrieve a list of post WITH sucess")
+    @Test
+    void getAllPostFromUserFollowedWithSucess() throws Exception {
+        final var offset = 5;
+        final var size = 5;
+        final var userId = 1L;
+        final var posts = TestMocks.postMock();
+
+        given(postPortMock.getAllPostFromUserFollowed(userId, offset, size)).willReturn(List.of(posts));
+
+        mockMvc.perform(get("/v1/post?page=1&size=5&seeingAll=false")
                 .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
