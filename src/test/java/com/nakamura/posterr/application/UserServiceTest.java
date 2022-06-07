@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,5 +55,20 @@ class UserServiceTest {
 
     }
 
+    @DisplayName("Given an userId when userId has following user then return them")
+    @Test
+    void getUserProfile() {
+        final var userEntity = TestMocks.userEntityMock();
+        final var userId = 1L;
+
+        when(userPortMock.getUserProfile(1L)).thenReturn(userEntity);
+
+        var result = userService.getUserProfile(userId);
+
+        assertThat(List.of(result))
+                .extracting("id", "username", "dateJoined")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX));
+
+    }
 
 }

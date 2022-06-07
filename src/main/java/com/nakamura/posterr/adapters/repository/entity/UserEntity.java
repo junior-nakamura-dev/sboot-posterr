@@ -1,15 +1,17 @@
 package com.nakamura.posterr.adapters.repository.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.nakamura.posterr.application.domain.User;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.OffsetDateTime;
 
-@Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode
 public class UserEntity {
 
     private Long id;
@@ -19,5 +21,14 @@ public class UserEntity {
 
     @NotNull
     private OffsetDateTime dateJoined;
+
+    public User toDomain() {
+        return User
+                .builder()
+                .id(this.id)
+                .username(this.username)
+                .dateJoined(this.dateJoined)
+                .build();
+    }
 
 }

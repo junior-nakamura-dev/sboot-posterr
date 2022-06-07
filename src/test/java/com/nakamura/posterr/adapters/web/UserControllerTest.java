@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -81,6 +82,21 @@ class UserControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].userId", is(1)))
                 .andExpect(jsonPath("$[0].userFollowedId", is(2)));
+    }
+
+    @DisplayName("Given an userId when return user profile")
+    @Test
+    void getUserProfile() throws Exception {
+        final var userEntity = TestMocks.userEntityMock();
+
+        given(userPortMock.getUserProfile(1L)).willReturn(userEntity);
+
+        mockMvc.perform(get("/v1/user/1").accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.username", is("TEST")))
+                .andExpect(jsonPath("$.dateJoined", is(String.valueOf(OffsetDateTime.MAX))));
     }
 
     @DisplayName("Given an userId when userId hasn´t followed user then return empty list")

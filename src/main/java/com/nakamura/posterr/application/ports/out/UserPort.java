@@ -2,6 +2,7 @@ package com.nakamura.posterr.application.ports.out;
 
 import com.nakamura.posterr.adapters.repository.entity.FollowedEntity;
 import com.nakamura.posterr.adapters.repository.entity.FollowingEntity;
+import com.nakamura.posterr.adapters.repository.entity.UserEntity;
 import com.nakamura.posterr.application.domain.FollowingUser;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
@@ -18,4 +19,5 @@ public interface UserPort {
 
     void unfollowUser(FollowingUser followingUser) throws AlreadyUnfollowThisUserException;
 
+    UserEntity getUserProfile(Long userId);
 }

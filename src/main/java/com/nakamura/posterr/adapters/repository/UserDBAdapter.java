@@ -2,6 +2,7 @@ package com.nakamura.posterr.adapters.repository;
 
 import com.nakamura.posterr.adapters.repository.entity.FollowedEntity;
 import com.nakamura.posterr.adapters.repository.entity.FollowingEntity;
+import com.nakamura.posterr.adapters.repository.entity.UserEntity;
 import com.nakamura.posterr.application.domain.FollowingUser;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
@@ -20,6 +21,7 @@ public class UserDBAdapter implements UserPort {
 
     private final FollowingRepository followingRepository;
     private final FollowedRepository followedRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<FollowingEntity> getFollowingUserById(Long userId) {
@@ -84,6 +86,16 @@ public class UserDBAdapter implements UserPort {
         followedRepository.removeFollowed(FollowedEntity.fromDomain(followedUser));
         log.info("DELETE - /v1/user/unfollow - UserDBAdapter - Sucess followedRepository");
         log.info("DELETE - /v1/user/unfollow - UserDBAdapter - Sucess to unfollow an user");
+    }
+
+    @Override
+    public UserEntity getUserProfile(Long userId) {
+        log.info("GET - /v1/user - UserDBAdapter - get user profile from userId {}", userId);
+
+        var userEntity = userRepository.getUser(userId);
+        log.info("GET - /v1/user - UserDBAdapter - Sucess to return User from UserRepository");
+
+        return userEntity;
     }
 
 }

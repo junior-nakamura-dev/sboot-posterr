@@ -4,12 +4,10 @@ import com.nakamura.posterr.adapters.repository.entity.FollowedEntity;
 import com.nakamura.posterr.adapters.repository.entity.FollowingEntity;
 import com.nakamura.posterr.application.domain.FollowedUser;
 import com.nakamura.posterr.application.domain.FollowingUser;
+import com.nakamura.posterr.application.domain.User;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
-import com.nakamura.posterr.application.ports.in.user.FollowUserUseCase;
-import com.nakamura.posterr.application.ports.in.user.GetAllFollowedUsersUseCase;
-import com.nakamura.posterr.application.ports.in.user.GetAllFollowingUsersUseCase;
-import com.nakamura.posterr.application.ports.in.user.UnfollowUserUseCase;
+import com.nakamura.posterr.application.ports.in.user.*;
 import com.nakamura.posterr.application.ports.out.UserPort;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
-public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedUsersUseCase, FollowUserUseCase, UnfollowUserUseCase {
+public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedUsersUseCase, FollowUserUseCase, UnfollowUserUseCase, GetUserProfileUseCase {
 
     private final UserPort userPort;
 
@@ -71,4 +69,17 @@ public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedU
 
         log.info("DELETE - /v1/user/follow - UserService - Sucess to unfollow an user");
     }
+
+    @Override
+    public User getUserProfile(Long userId) {
+        log.info("GET - /v1/user - UserService - user {} get user profile {}", userId);
+        final var userEntity= userPort.getUserProfile(userId);
+
+        log.info("GET - /v1/user - UserService - Sucess to return userEntity");
+
+        final var user = userEntity.toDomain();
+
+        return user;
+    }
+
 }

@@ -4,6 +4,7 @@ import com.nakamura.posterr.TestMocks;
 import com.nakamura.posterr.adapters.web.handler.UserHandler;
 import com.nakamura.posterr.application.ports.in.user.GetAllFollowedUsersUseCase;
 import com.nakamura.posterr.application.ports.in.user.GetAllFollowingUsersUseCase;
+import com.nakamura.posterr.application.ports.in.user.GetUserProfileUseCase;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,6 +27,9 @@ class UserHandlerTest {
 
     @Mock
     private GetAllFollowedUsersUseCase getAllFollowedUsersUseCaseMock;
+
+    @Mock
+    private GetUserProfileUseCase getUserProfileUseCase;
 
     @InjectMocks
     private UserHandler userHandler;
@@ -53,6 +58,21 @@ class UserHandlerTest {
                 .hasSize(1)
                 .extracting("userId", "userFollowedId")
                 .contains(tuple(1L, 2L));
+    }
+
+    @DisplayName("Given an userId when userId has following user then return them")
+    @Test
+    void getUserProfileWithSucess() {
+        final var user = TestMocks.userMock();
+        final var userId = 1L;
+
+        when(getUserProfileUseCase.getUserProfile(userId)).thenReturn(user);
+
+        var result = userHandler.getUserProfile(userId);
+
+        assertThat(List.of(result))
+                .extracting("id", "username", "dateJoined")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX));
     }
 
 }

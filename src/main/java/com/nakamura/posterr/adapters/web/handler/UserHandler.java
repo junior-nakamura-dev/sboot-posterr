@@ -3,14 +3,12 @@ package com.nakamura.posterr.adapters.web.handler;
 import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.adapters.web.dto.FollowedUserOutput;
 import com.nakamura.posterr.adapters.web.dto.FollowingUserOutput;
+import com.nakamura.posterr.adapters.web.dto.UserOutput;
 import com.nakamura.posterr.application.domain.FollowingUser;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
 import com.nakamura.posterr.application.exception.CantFollowYourselfException;
-import com.nakamura.posterr.application.ports.in.user.FollowUserUseCase;
-import com.nakamura.posterr.application.ports.in.user.GetAllFollowedUsersUseCase;
-import com.nakamura.posterr.application.ports.in.user.GetAllFollowingUsersUseCase;
-import com.nakamura.posterr.application.ports.in.user.UnfollowUserUseCase;
+import com.nakamura.posterr.application.ports.in.user.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +25,19 @@ public class UserHandler {
     private final GetAllFollowedUsersUseCase getAllFollowedUsersUseCase;
     private final FollowUserUseCase followUserUseCase;
     private final UnfollowUserUseCase unfollowUserUseCase;
+    private final GetUserProfileUseCase getUserProfileUseCase;
+
+    public UserOutput getUserProfile(Long userId) {
+        log.info("GET - /v1/user - UserHandler - get user profile from userId {}", userId);
+
+        var user= getUserProfileUseCase.getUserProfile(userId);
+        log.info("GET - /v1/user - UserHandler - Sucess to return from getUserProfile");
+
+        var userOutput = UserOutput.fromDomain(user);
+        log.info("GET - /v1/user - UserHandler - Sucess mapping to UserOutput");
+
+        return userOutput;
+    }
 
     public List<FollowingUserOutput> getAllFollowingUsers(Long userId) {
         log.info("GET - /v1/user/following - UserHandler - get all followingUser from userId {}", userId);

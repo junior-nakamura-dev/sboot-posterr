@@ -28,6 +28,9 @@ class UserDBAdapterTest {
     @Mock
     private FollowedRepository followedRepositoryMock;
 
+    @Mock
+    private UserRepository userRepositoryMock;
+
     @InjectMocks
     private UserDBAdapter userDBAdapter;
 
@@ -112,6 +115,17 @@ class UserDBAdapterTest {
 
         when(followingRepositoryMock.isFollowing(userId, userFollowingId)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> userDBAdapter.unfollowUser(followingUser)).isInstanceOf(AlreadyUnfollowThisUserException.class);
+    }
+
+    @DisplayName("Given an userId return the user profile")
+    @Test
+    void getUserProfile() {
+        final var userEntity = TestMocks.userEntityMock();
+        final var userId = 1L;
+
+        when(userRepositoryMock.getUser(userId)).thenReturn(userEntity);
+
+        userDBAdapter.getUserProfile(userId);
     }
 
 

@@ -1,7 +1,8 @@
 CREATE TABLE user_entity
 (
     id                BIGINT PRIMARY KEY,
-    username          VARCHAR(14) NOT NULL
+    username          VARCHAR(14) NOT NULL,
+    date_joined       TIMESTAMP NOT NULL
 );
 
 CREATE TABLE following_entity

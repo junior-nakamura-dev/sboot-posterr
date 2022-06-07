@@ -3,6 +3,7 @@ package com.nakamura.posterr.adapters.web;
 import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.adapters.web.dto.FollowedUserOutput;
 import com.nakamura.posterr.adapters.web.dto.FollowingUserOutput;
+import com.nakamura.posterr.adapters.web.dto.UserOutput;
 import com.nakamura.posterr.adapters.web.handler.UserHandler;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
@@ -26,6 +27,16 @@ import java.util.List;
 public class UserController {
 
     private final UserHandler userHandler;
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserOutput> getUserProfile(@PathVariable Long userId) {
+        log.info("GET - /v1/user - user {} get user profile {}", userId);
+
+        var result = userHandler.getUserProfile(userId);
+
+        log.info("GET - /v1/user - Sucess - 200");
+        return ResponseEntity.ok(result);
+    }
 
     @GetMapping(path = "/following")
     public ResponseEntity<List<FollowingUserOutput>> getAllFollowingUser() {

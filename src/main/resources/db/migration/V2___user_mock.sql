@@ -1,6 +1,6 @@
-INSERT INTO user_entity VALUES (1, 'john-smith');
-INSERT INTO user_entity VALUES (2, 'jr-nakamura');
-INSERT INTO user_entity VALUES (3, 'john-mills');
+INSERT INTO user_entity VALUES (1, 'john-smith', now() at time zone 'utc');
+INSERT INTO user_entity VALUES (2, 'jr-nakamura', now() at time zone 'utc');
+INSERT INTO user_entity VALUES (3, 'john-mills', now() at time zone 'utc');
 
 
 INSERT INTO following_entity VALUES (1, 2);
