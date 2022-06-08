@@ -1,8 +1,8 @@
 package com.nakamura.posterr.adapters.web;
 
 import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
-import com.nakamura.posterr.adapters.web.dto.FollowedUserOutput;
-import com.nakamura.posterr.adapters.web.dto.FollowingUserOutput;
+import com.nakamura.posterr.adapters.web.dto.FollowedUsersOutput;
+import com.nakamura.posterr.adapters.web.dto.FollowingUsersOutput;
 import com.nakamura.posterr.adapters.web.dto.UserOutput;
 import com.nakamura.posterr.adapters.web.handler.UserHandler;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -39,24 +38,24 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(path = "/following/{userId}")
-    public ResponseEntity<List<FollowingUserOutput>> getAllFollowingUser(@PathVariable Long userId) {
+    @GetMapping(path = "/{userId}/following")
+    public ResponseEntity<FollowingUsersOutput> getAllFollowingUser(@PathVariable Long userId) {
         log.info("GET - /v1/user/following - get all followingUser from userId {}", userId);
 
         var result = userHandler.getAllFollowingUsers(userId);
 
         log.info("GET - /v1/user/following - Sucess - 200", userId);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new FollowingUsersOutput(result));
     }
 
-    @GetMapping(path = "/followed/{userId}")
-    public ResponseEntity<List<FollowedUserOutput>> getAllFollowedUser(@PathVariable Long userId) {
+    @GetMapping(path = "/{userId}/followed")
+    public ResponseEntity<FollowedUsersOutput> getAllFollowedUser(@PathVariable Long userId) {
         log.info("GET - /v1/user/followed - get all followedUser from userId {}", userId);
 
         var result = userHandler.getFollowedUserOutputs(userId);
 
         log.info("GET - /v1/user/followed - Sucess - 200", userId);
-        return ResponseEntity.ok(result);
+        return ResponseEntity.ok(new FollowedUsersOutput(result));
     }
 
     @PostMapping(path = "/follow")

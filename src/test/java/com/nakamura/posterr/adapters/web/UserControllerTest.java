@@ -52,12 +52,12 @@ class UserControllerTest {
 
         given(userPortMock.getFollowingUserById(1L)).willReturn(List.of(TestMocks.followingEntityMock()));
 
-        mockMvc.perform(get("/v1/user/following").accept(APPLICATION_JSON))
+        mockMvc.perform(get("/v1/user/1/following").accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].userFollowingId", is(2)));
+                .andExpect(jsonPath("$.amount", is(1)))
+                .andExpect(jsonPath("$.followingUsersList[0].userId", is(1)))
+                .andExpect(jsonPath("$.followingUsersList[0].userFollowingId", is(2)));
     }
 
     @DisplayName("Given an userId when userId hasn´t following user then return empty list")
@@ -66,10 +66,11 @@ class UserControllerTest {
 
         given(userPortMock.getFollowingUserById(1L)).willReturn(List.of());
 
-        mockMvc.perform(get("/v1/user/following").accept(APPLICATION_JSON))
+        mockMvc.perform(get("/v1/user/1/following").accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$.amount", is(0)))
+                .andExpect(jsonPath("$.followingUsersList", hasSize(0)));
     }
 
     @DisplayName("Given an userId when userId has followed user then return them")
@@ -78,12 +79,12 @@ class UserControllerTest {
 
         given(userPortMock.getFollowedUserById(1L)).willReturn(List.of(TestMocks.followedEntityMock()));
 
-        mockMvc.perform(get("/v1/user/followed").accept(APPLICATION_JSON))
+        mockMvc.perform(get("/v1/user/1/followed").accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].userFollowedId", is(2)));
+                .andExpect(jsonPath("$.amount", is(1)))
+                .andExpect(jsonPath("$.followedUserList[0].userId", is(1)))
+                .andExpect(jsonPath("$.followedUserList.[0].userFollowedId", is(2)));
     }
 
     @DisplayName("Given an userId when return user profile")
@@ -111,10 +112,11 @@ class UserControllerTest {
 
         given(userPortMock.getFollowedUserById(1L)).willReturn(List.of());
 
-        mockMvc.perform(get("/v1/user/followed").accept(APPLICATION_JSON))
+        mockMvc.perform(get("/v1/user/1/followed").accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(0)));
+                .andExpect(jsonPath("$.amount", is(0)))
+                .andExpect(jsonPath("$.followedUserList", hasSize(0)));
     }
 
     @DisplayName("Given an userFollowingId when userId wants follow him then return following him")
