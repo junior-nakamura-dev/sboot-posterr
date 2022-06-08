@@ -39,17 +39,18 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity getPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int chunk, @RequestParam(defaultValue = "true") boolean seeingAll) {
+    public ResponseEntity getPosts(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "5") int chunk,
+                                   @RequestParam(defaultValue = "true") boolean seeingAll, @RequestParam(defaultValue = "0") Long lastPostIdSeen) {
         final var userId = SecurityContextMock.userId;
         log.info("GET - /v1/post - Start process to get list of posts to user");
 
-       List<PostOutput> postOutputs;
+        List<PostOutput> postOutputs;
         if (seeingAll) {
             log.info("GET - /v1/post - Choose flow to retrieve post from wherever user");
-            postOutputs = postHandler.getPosts(userId, page, chunk, true);
+            postOutputs = postHandler.getPosts(userId, page, chunk, true, lastPostIdSeen);
         } else {
             log.info("GET - /v1/post - Choose flow to retrieve post from user followed");
-            postOutputs = postHandler.getPosts(userId, page, chunk);
+            postOutputs = postHandler.getPosts(userId, page, chunk, lastPostIdSeen);
         }
 
         log.info("GET - /v1/post - Sucess - 200", userId);

@@ -57,9 +57,11 @@ class PostHandlerTest {
         final var post = TestMocks.postMock();
         final var userId = 1L;
         final var chunk = 5;
-        when(getAllPostUseCase.getAllPost(userId, OFF_SET_RANGE, chunk)).thenReturn(List.of(post));
+        final var lastPostId = 1L;
 
-        var result = postHandler.getPosts(userId, 1, chunk, true);
+        when(getAllPostUseCase.getAllPost(userId, OFF_SET_RANGE, chunk, lastPostId)).thenReturn(List.of(post));
+
+        var result = postHandler.getPosts(userId, 1, chunk, true, lastPostId);
 
         assertThat(result)
                 .hasSize(1)
@@ -73,9 +75,11 @@ class PostHandlerTest {
         final var post = TestMocks.postMock();
         final var userId = 1L;
         final var chunk = 5;
-        when(getAllPostUseCase.getAllPostFromUserFollowed(userId, OFF_SET_RANGE, chunk)).thenReturn(List.of(post));
+        final var lastPostId = 1L;
 
-        var result = postHandler.getPosts(userId, 1, chunk);
+        when(getAllPostUseCase.getAllPostFromUserFollowed(userId, OFF_SET_RANGE, chunk, lastPostId)).thenReturn(List.of(post));
+
+        var result = postHandler.getPosts(userId, 1, chunk, lastPostId);
 
         assertThat(result)
                 .hasSize(1)

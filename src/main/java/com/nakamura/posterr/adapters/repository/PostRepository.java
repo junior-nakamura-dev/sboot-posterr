@@ -24,11 +24,11 @@ public interface PostRepository {
 
     @SqlQuery
     @RegisterBeanMapper(PostEntity.class)
-    List<PostEntity> getAllPost(int offset, int chunk);
+    List<PostEntity> getAllPost(int offset, int chunk, Long lastPostId);
 
     @SqlQuery
     @RegisterBeanMapper(PostEntity.class)
-    List<PostEntity> getAllPostFromUserFollowed(Long userId, int offset, int chunk);
+    List<PostEntity> getAllPostFromUserFollowed(Long userId, int offset, int chunk, Long lastPostId);
 
     @SqlQuery
     Long countUserPosts(Long userId);

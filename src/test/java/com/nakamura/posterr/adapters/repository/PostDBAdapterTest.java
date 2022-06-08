@@ -56,9 +56,11 @@ class PostDBAdapterTest {
         final var offset = 5;
         final var userId = 1L;
         final var size = 5;
-        when(postRepositoryMock.getAllPost(offset, size)).thenReturn(List.of(postEntity));
+        final Long lastPostId = null;
 
-        final var result = postDBAdapter.getAllPost(userId, offset, size);
+        when(postRepositoryMock.getAllPost(offset, size, lastPostId)).thenReturn(List.of(postEntity));
+
+        final var result = postDBAdapter.getAllPost(userId, offset, size, lastPostId);
 
         assertThat(result)
                 .hasSize(1)
@@ -73,9 +75,10 @@ class PostDBAdapterTest {
         final var offset = 5;
         final var userId = 1L;
         final var chunk = 5;
-        when(postRepositoryMock.getAllPostFromUserFollowed(userId, offset, chunk)).thenReturn(List.of(postEntity));
+        final Long lastPostId = null;
+        when(postRepositoryMock.getAllPostFromUserFollowed(userId, offset, chunk, lastPostId)).thenReturn(List.of(postEntity));
 
-        final var result = postDBAdapter.getAllPostFromUserFollowed(userId, offset, chunk);
+        final var result = postDBAdapter.getAllPostFromUserFollowed(userId, offset, chunk, lastPostId);
 
         assertThat(result)
                 .hasSize(1)

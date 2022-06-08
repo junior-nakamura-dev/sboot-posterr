@@ -39,10 +39,10 @@ public class PostDBAdapter implements PostPort {
     }
 
     @Override
-    public List<Post> getAllPost(Long userId, int offset, int chunk) {
-        log.info("GET - /v1/post - PostDBAdapter - Get all post pagination for user {} and offset {} and chunk {}", userId, offset, chunk);
+    public List<Post> getAllPost(Long userId, int offset, int chunk, Long lastPostId) {
+        log.info("GET - /v1/post - PostDBAdapter - Get all post pagination for user {} and offset {} and chunk {} and lastPostId {}", userId, offset, chunk, lastPostId);
 
-        final var postEntities = postRepository.getAllPost(offset, chunk);
+        final var postEntities = postRepository.getAllPost(offset, chunk, lastPostId);
         log.info("GET - /v1/post - PostDBAdapter - Sucess to retrieve postEntites from postRepository.getAllPost");
 
         final var posts = postEntities.stream().map(PostEntity::toDomain).collect(Collectors.toList());
@@ -51,10 +51,10 @@ public class PostDBAdapter implements PostPort {
     }
 
     @Override
-    public List<Post> getAllPostFromUserFollowed(Long userId, int offset, int chunk) {
+    public List<Post> getAllPostFromUserFollowed(Long userId, int offset, int chunk, Long lastPostId) {
         log.info("GET - /v1/post - PostDBAdapter - Get post to userId {} from user followed user {} and offset {} and chunk {}", userId, offset, chunk);
 
-        final var postEntities = postRepository.getAllPostFromUserFollowed(userId, offset, chunk);
+        final var postEntities = postRepository.getAllPostFromUserFollowed(userId, offset, chunk, lastPostId);
         log.info("GET - /v1/post - PostDBAdapter - Sucess to retrieve postEntites from postRepository.getAllPostFromUserFollowed");
 
         final var posts = postEntities.stream().map(PostEntity::toDomain).collect(Collectors.toList());

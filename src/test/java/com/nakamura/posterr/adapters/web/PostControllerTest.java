@@ -84,10 +84,11 @@ class PostControllerTest {
         final var size = 5;
         final var userId = 1L;
         final var posts = TestMocks.postMock();
+        final Long lastPostId = 100L;
 
-        given(postPortMock.getAllPost(userId, offset, size)).willReturn(List.of(posts));
+        given(postPortMock.getAllPost(userId, offset, size, lastPostId)).willReturn(List.of(posts));
 
-        mockMvc.perform(get("/v1/post?page=1&size=5")
+        mockMvc.perform(get("/v1/post?page=1&size=5&lastPostIdSeen=100")
                 .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -105,10 +106,11 @@ class PostControllerTest {
         final var size = 5;
         final var userId = 1L;
         final var posts = TestMocks.postMock();
+        final Long lastPostId = 100L;
 
-        given(postPortMock.getAllPostFromUserFollowed(userId, offset, size)).willReturn(List.of(posts));
+        given(postPortMock.getAllPostFromUserFollowed(userId, offset, size, lastPostId)).willReturn(List.of(posts));
 
-        mockMvc.perform(get("/v1/post?page=1&size=5&seeingAll=false")
+        mockMvc.perform(get("/v1/post?page=1&size=5&seeingAll=false&lastPostIdSeen=100")
                 .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
