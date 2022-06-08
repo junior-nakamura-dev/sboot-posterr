@@ -30,4 +30,7 @@ public interface PostRepository {
     @RegisterBeanMapper(PostEntity.class)
     List<PostEntity> getAllPostFromUserFollowed(Long userId, int offset, int chunk);
 
+    @SqlQuery
+    Long countUserPosts(Long userId);
+
 }

@@ -2,6 +2,7 @@ package com.nakamura.posterr.application;
 
 import com.nakamura.posterr.TestMocks;
 import com.nakamura.posterr.adapters.repository.entity.FollowingEntity;
+import com.nakamura.posterr.application.ports.out.PostPort;
 import com.nakamura.posterr.application.ports.out.UserPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ class UserServiceTest {
 
     @Mock
     private UserPort userPortMock;
+
+    @Mock
+    private PostPort postPortMock;
 
     @InjectMocks
     private UserService userService;
@@ -64,14 +68,15 @@ class UserServiceTest {
         final var userId = 1L;
         final var userProfileId = 2L;
 
-        when(userPortMock.getUserProfile(2L)).thenReturn(userEntity);
-        when(userPortMock.isFollow(1L, 2L)).thenReturn(Optional.of(FollowingEntity.builder().build()));
+        when(userPortMock.getUserProfile(userProfileId)).thenReturn(userEntity);
+        when(userPortMock.isFollow(userId, userProfileId)).thenReturn(Optional.of(FollowingEntity.builder().build()));
+        when(postPortMock.countPosts(userProfileId)).thenReturn(5L);
 
         var result = userService.getUserProfile(userId, userProfileId);
 
         assertThat(List.of(result))
-                .extracting("id", "username", "dateJoined", "isFollowing")
-                .contains(tuple(2L, "TEST", OffsetDateTime.MAX, true));
+                .extracting("id", "username", "dateJoined", "isFollowing", "amountPosts")
+                .contains(tuple(2L, "TEST", OffsetDateTime.MAX, true, 5L));
 
     }
 
@@ -82,14 +87,15 @@ class UserServiceTest {
         final var userId = 1L;
         final var userProfileId = 2L;
 
-        when(userPortMock.getUserProfile(2L)).thenReturn(userEntity);
-        when(userPortMock.isFollow(1L, 2L)).thenReturn(Optional.empty());
+        when(userPortMock.getUserProfile(userProfileId)).thenReturn(userEntity);
+        when(userPortMock.isFollow(userId, userProfileId)).thenReturn(Optional.empty());
+        when(postPortMock.countPosts(userProfileId)).thenReturn(5L);
 
         var result = userService.getUserProfile(userId, userProfileId);
 
         assertThat(List.of(result))
-                .extracting("id", "username", "dateJoined", "isFollowing")
-                .contains(tuple(2L, "TEST", OffsetDateTime.MAX, false));
+                .extracting("id", "username", "dateJoined", "isFollowing", "amountPosts")
+                .contains(tuple(2L, "TEST", OffsetDateTime.MAX, false, 5L));
 
     }
 

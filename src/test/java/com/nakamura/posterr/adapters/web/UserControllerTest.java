@@ -7,6 +7,7 @@ import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.application.UserService;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
+import com.nakamura.posterr.application.ports.out.PostPort;
 import com.nakamura.posterr.application.ports.out.UserPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,9 @@ class UserControllerTest {
 
     @MockBean
     private UserPort userPortMock;
+
+    @MockBean
+    private PostPort postPortMock;
 
     @Autowired
     private UserService service;
@@ -94,6 +98,7 @@ class UserControllerTest {
         final var userProfileId = 2L;
         final var userEntity = TestMocks.userEntityMock(userProfileId);
 
+        given(postPortMock.countPosts(userProfileId)).willReturn(5L);
         given(userPortMock.getUserProfile(userProfileId)).willReturn(userEntity);
         given(userPortMock.isFollow(userId, userProfileId)).willReturn(Optional.of(FollowingEntity.builder().build()));
 
@@ -103,6 +108,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(2)))
                 .andExpect(jsonPath("$.username", is("TEST")))
                 .andExpect(jsonPath("$.following", is(true)))
+                .andExpect(jsonPath("$.amountPosts", is(5)))
                 .andExpect(jsonPath("$.dateJoined", is(String.valueOf(OffsetDateTime.MAX))));
     }
 

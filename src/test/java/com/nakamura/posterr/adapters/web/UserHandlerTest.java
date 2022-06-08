@@ -72,8 +72,8 @@ class UserHandlerTest {
         var result = userHandler.getUserProfile(userId, userFollowingId);
 
         assertThat(List.of(result))
-                .extracting("id", "username", "dateJoined", "isFollowing")
-                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, false));
+                .extracting("id", "username", "dateJoined", "isFollowing", "amountPosts")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, false, 5L));
     }
 
 }

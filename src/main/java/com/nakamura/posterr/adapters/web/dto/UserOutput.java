@@ -17,6 +17,7 @@ public class UserOutput {
     private String username;
     private OffsetDateTime dateJoined;
     private boolean isFollowing;
+    private Long amountPosts;
 
     public static UserOutput fromDomain(User user) {
         return UserOutput
@@ -25,6 +26,7 @@ public class UserOutput {
                 .username(user.getUsername())
                 .dateJoined(user.getDateJoined())
                 .isFollowing(user.isFollowing())
+                .amountPosts(user.getAmountPosts())
                 .build();
     }
 

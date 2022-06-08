@@ -8,6 +8,7 @@ import com.nakamura.posterr.application.domain.User;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
 import com.nakamura.posterr.application.ports.in.user.*;
+import com.nakamura.posterr.application.ports.out.PostPort;
 import com.nakamura.posterr.application.ports.out.UserPort;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedU
         UnfollowUserUseCase, GetUserProfileUseCase, GetIfUserIsFollowedUseCase {
 
     private final UserPort userPort;
+    private final PostPort postPort;
 
     @Override
     public List<FollowingUser> getFollowingUsers(Long userId) {
@@ -81,6 +83,7 @@ public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedU
         final var user = userEntity.toDomain();
 
         user.setFollowing(isFollow(userId, userFollowingId));
+        user.setAmountPosts(postPort.countPosts(userFollowingId));
 
         return user;
     }

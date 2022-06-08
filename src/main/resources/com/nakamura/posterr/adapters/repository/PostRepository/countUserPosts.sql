@@ -1,0 +1,1 @@
+select count(*) from post_entity where user_id = :userId;

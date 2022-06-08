@@ -13,4 +13,6 @@ public interface PostPort {
 
     List<Post> getAllPostFromUserFollowed(Long userId, int offset, int size);
 
+    Long countPosts(Long userId);
+
 }

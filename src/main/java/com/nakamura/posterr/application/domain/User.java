@@ -15,4 +15,6 @@ public class User {
     private OffsetDateTime dateJoined;
     @Setter
     private boolean isFollowing;
+    @Setter
+    private Long amountPosts;
 }

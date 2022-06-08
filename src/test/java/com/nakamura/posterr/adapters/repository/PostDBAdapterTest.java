@@ -83,4 +83,15 @@ class PostDBAdapterTest {
                 .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L, null));
     }
 
+    @DisplayName("GIVEN a userId return amount posts from this user")
+    @Test
+    void getAmountPostsFromUser() {
+        final var userId = 1L;
+        when(postRepositoryMock.countUserPosts(userId)).thenReturn(5L);
+
+        final var result = postDBAdapter.countPosts(userId);
+
+        assertThat(result).isEqualTo(5L);
+    }
+
 }

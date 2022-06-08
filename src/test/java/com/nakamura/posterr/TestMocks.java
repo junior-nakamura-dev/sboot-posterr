@@ -80,6 +80,7 @@ public class TestMocks {
                 .id(1L)
                 .dateJoined(OffsetDateTime.MAX)
                 .username("TEST")
+                .amountPosts(5L)
                 .build();
     }
 

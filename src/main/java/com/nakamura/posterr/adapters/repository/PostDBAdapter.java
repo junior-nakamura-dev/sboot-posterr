@@ -30,7 +30,7 @@ public class PostDBAdapter implements PostPort {
             throw new LimitRangePostDayException();
         }
 
-        final var postEntity= PostEntity.fromDomain(post);
+        final var postEntity = PostEntity.fromDomain(post);
         postEntity.setAmountPostDay(amountPostDay + 1);
         log.info("POST - /v1/post - PostDBAdapter - Add a more post to user");
 
@@ -60,6 +60,16 @@ public class PostDBAdapter implements PostPort {
         final var posts = postEntities.stream().map(PostEntity::toDomain).collect(Collectors.toList());
         log.info("GET - /v1/post - PostDBAdapter - Sucess to mapping to Post domain");
         return posts;
+    }
+
+    @Override
+    public Long countPosts(Long userId) {
+        log.info("GET - /v1/user - PostDBAdapter - Get amount post to userId {}", userId);
+
+        final var amountPosts = postRepository.countUserPosts(userId);
+        log.info("GET - /v1/user - PostDBAdapter - Sucess to retrieve amount post from postRepository.countUserPosts");
+
+        return amountPosts;
     }
 
 }
