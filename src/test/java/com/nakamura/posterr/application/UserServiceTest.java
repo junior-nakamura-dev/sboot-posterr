@@ -1,6 +1,7 @@
 package com.nakamura.posterr.application;
 
 import com.nakamura.posterr.TestMocks;
+import com.nakamura.posterr.adapters.repository.entity.FollowingEntity;
 import com.nakamura.posterr.application.ports.out.UserPort;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
@@ -55,19 +57,39 @@ class UserServiceTest {
 
     }
 
-    @DisplayName("Given an userId when userId has following user then return them")
+    @DisplayName("When the user request to see an user profile and the user follow him")
     @Test
-    void getUserProfile() {
-        final var userEntity = TestMocks.userEntityMock();
+    void getUserProfileWhenFollowingUser() {
+        final var userEntity = TestMocks.userEntityMock(2L);
         final var userId = 1L;
+        final var userProfileId = 2L;
 
-        when(userPortMock.getUserProfile(1L)).thenReturn(userEntity);
+        when(userPortMock.getUserProfile(2L)).thenReturn(userEntity);
+        when(userPortMock.isFollow(1L, 2L)).thenReturn(Optional.of(FollowingEntity.builder().build()));
 
-        var result = userService.getUserProfile(userId);
+        var result = userService.getUserProfile(userId, userProfileId);
 
         assertThat(List.of(result))
-                .extracting("id", "username", "dateJoined")
-                .contains(tuple(1L, "TEST", OffsetDateTime.MAX));
+                .extracting("id", "username", "dateJoined", "isFollowing")
+                .contains(tuple(2L, "TEST", OffsetDateTime.MAX, true));
+
+    }
+
+    @DisplayName("When the user request to see an user profile and the user not follow him")
+    @Test
+    void getUserProfileWhenNotFollowingUser() {
+        final var userEntity = TestMocks.userEntityMock(2L);
+        final var userId = 1L;
+        final var userProfileId = 2L;
+
+        when(userPortMock.getUserProfile(2L)).thenReturn(userEntity);
+        when(userPortMock.isFollow(1L, 2L)).thenReturn(Optional.empty());
+
+        var result = userService.getUserProfile(userId, userProfileId);
+
+        assertThat(List.of(result))
+                .extracting("id", "username", "dateJoined", "isFollowing")
+                .contains(tuple(2L, "TEST", OffsetDateTime.MAX, false));
 
     }
 

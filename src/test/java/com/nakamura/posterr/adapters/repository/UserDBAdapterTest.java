@@ -120,12 +120,23 @@ class UserDBAdapterTest {
     @DisplayName("Given an userId return the user profile")
     @Test
     void getUserProfile() {
-        final var userEntity = TestMocks.userEntityMock();
         final var userId = 1L;
+        final var userEntity = TestMocks.userEntityMock(userId);
 
         when(userRepositoryMock.getUser(userId)).thenReturn(userEntity);
 
         userDBAdapter.getUserProfile(userId);
+    }
+
+    @DisplayName("Given an userId and userFollowingId return FollowingEntity with userId follow userFollowingId ")
+    @Test
+    void getFollowingUser() {
+        final var userId = 1L;
+        final var userFollowingId = 2L;
+
+        when(followingRepositoryMock.isFollowing(userId, userFollowingId)).thenReturn(Optional.of(FollowingEntity.builder().build()));
+
+        userDBAdapter.isFollow(userId, userFollowingId);
     }
 
 

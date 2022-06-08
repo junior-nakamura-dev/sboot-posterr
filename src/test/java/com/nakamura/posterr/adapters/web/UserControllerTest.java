@@ -2,6 +2,7 @@ package com.nakamura.posterr.adapters.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nakamura.posterr.TestMocks;
+import com.nakamura.posterr.adapters.repository.entity.FollowingEntity;
 import com.nakamura.posterr.adapters.web.dto.FollowUserInput;
 import com.nakamura.posterr.application.UserService;
 import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -87,15 +89,19 @@ class UserControllerTest {
     @DisplayName("Given an userId when return user profile")
     @Test
     void getUserProfile() throws Exception {
-        final var userEntity = TestMocks.userEntityMock();
+        final var userId = 1L;
+        final var userProfileId = 2L;
+        final var userEntity = TestMocks.userEntityMock(userProfileId);
 
-        given(userPortMock.getUserProfile(1L)).willReturn(userEntity);
+        given(userPortMock.getUserProfile(userProfileId)).willReturn(userEntity);
+        given(userPortMock.isFollow(userId, userProfileId)).willReturn(Optional.of(FollowingEntity.builder().build()));
 
-        mockMvc.perform(get("/v1/user/1").accept(APPLICATION_JSON))
+        mockMvc.perform(get("/v1/user/2").accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.id", is(2)))
                 .andExpect(jsonPath("$.username", is("TEST")))
+                .andExpect(jsonPath("$.following", is(true)))
                 .andExpect(jsonPath("$.dateJoined", is(String.valueOf(OffsetDateTime.MAX))));
     }
 

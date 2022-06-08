@@ -27,10 +27,10 @@ public class UserHandler {
     private final UnfollowUserUseCase unfollowUserUseCase;
     private final GetUserProfileUseCase getUserProfileUseCase;
 
-    public UserOutput getUserProfile(Long userId) {
+    public UserOutput getUserProfile(Long userId, Long userFollowingId) {
         log.info("GET - /v1/user - UserHandler - get user profile from userId {}", userId);
 
-        var user= getUserProfileUseCase.getUserProfile(userId);
+        var user = getUserProfileUseCase.getUserProfile(userId, userFollowingId);
         log.info("GET - /v1/user - UserHandler - Sucess to return from getUserProfile");
 
         var userOutput = UserOutput.fromDomain(user);
@@ -42,7 +42,7 @@ public class UserHandler {
     public List<FollowingUserOutput> getAllFollowingUsers(Long userId) {
         log.info("GET - /v1/user/following - UserHandler - get all followingUser from userId {}", userId);
 
-        var followingUsers= getAllFollowingUsersUseCase.getFollowingUsers(userId);
+        var followingUsers = getAllFollowingUsersUseCase.getFollowingUsers(userId);
 
         log.info("GET - /v1/user/following - UserHandler - Sucess to return from GetAllFollowingUsersUseCase");
 
@@ -59,11 +59,11 @@ public class UserHandler {
     public List<FollowedUserOutput> getFollowedUserOutputs(Long userId) {
         log.info("GET - /v1/user/followed - get all followingUser from userId {}", userId);
 
-        var followedUsers= getAllFollowedUsersUseCase.getFollowedUsers(userId);
+        var followedUsers = getAllFollowedUsersUseCase.getFollowedUsers(userId);
 
         log.info("GET - /v1/user/followed - UserHandler - Sucess to return from GetAllFollowedUsersUseCase");
 
-        var followedUserOutputs= followedUsers
+        var followedUserOutputs = followedUsers
                 .stream()
                 .map(FollowedUserOutput::fromDomain)
                 .collect(Collectors.toList());

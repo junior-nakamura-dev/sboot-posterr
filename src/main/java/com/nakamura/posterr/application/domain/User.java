@@ -1,9 +1,6 @@
 package com.nakamura.posterr.application.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.OffsetDateTime;
 
@@ -16,4 +13,6 @@ public class User {
     private Long id;
     private String username;
     private OffsetDateTime dateJoined;
+    @Setter
+    private boolean isFollowing;
 }

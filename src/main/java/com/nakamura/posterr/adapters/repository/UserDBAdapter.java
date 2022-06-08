@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -47,7 +48,7 @@ public class UserDBAdapter implements UserPort {
     public void followUser(FollowingUser followingUser) throws AlreadyFollowThisUserException {
         log.info("POST - /v1/user/follow - UserDBAdapter - userId {} follow the user {}", followingUser.getUserId(), followingUser.getUserFollowingId());
 
-        final var followingEntity= followingRepository.isFollowing(followingUser.getUserId(), followingUser.getUserFollowingId());
+        final var followingEntity = followingRepository.isFollowing(followingUser.getUserId(), followingUser.getUserFollowingId());
 
         if (followingEntity.isPresent()) {
             log.info("POST - /v1/user/follow - UserDBAdapter - userId {} already follow the user {}", followingUser.getUserId(), followingUser.getUserFollowingId());
@@ -70,7 +71,7 @@ public class UserDBAdapter implements UserPort {
     public void unfollowUser(FollowingUser followingUser) throws AlreadyUnfollowThisUserException {
         log.info("DELETE - /v1/user/unfollow - UserDBAdapter - userId {} unfollow the user {}", followingUser.getUserId(), followingUser.getUserFollowingId());
 
-        final var followingEntity= followingRepository.isFollowing(followingUser.getUserId(), followingUser.getUserFollowingId());
+        final var followingEntity = followingRepository.isFollowing(followingUser.getUserId(), followingUser.getUserFollowingId());
 
         if (followingEntity.isEmpty()) {
             log.info("DELETE - /v1/user/unfollow - UserDBAdapter - userId {} already unfollow the user {}", followingUser.getUserId(), followingUser.getUserFollowingId());
@@ -94,6 +95,16 @@ public class UserDBAdapter implements UserPort {
 
         var userEntity = userRepository.getUser(userId);
         log.info("GET - /v1/user - UserDBAdapter - Sucess to return User from UserRepository");
+
+        return userEntity;
+    }
+
+    @Override
+    public Optional<FollowingEntity> isFollow(Long userId, Long userFollowingId) {
+        log.info("GET - /v1/user/isFollow - UserDBAdapter - verify with user id {} follow user {}", userId, userFollowingId);
+
+        var userEntity = followingRepository.isFollowing(userId, userFollowingId);
+        log.info("GET - /v1/user/isFollow - UserDBAdapter - Sucess to return User from UserRepository");
 
         return userEntity;
     }

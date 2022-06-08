@@ -8,6 +8,7 @@ import com.nakamura.posterr.application.exception.AlreadyFollowThisUserException
 import com.nakamura.posterr.application.exception.AlreadyUnfollowThisUserException;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserPort {
 
@@ -20,4 +21,6 @@ public interface UserPort {
     void unfollowUser(FollowingUser followingUser) throws AlreadyUnfollowThisUserException;
 
     UserEntity getUserProfile(Long userId);
+    Optional<FollowingEntity> isFollow(Long userId, Long userFollowingId);
+
 }

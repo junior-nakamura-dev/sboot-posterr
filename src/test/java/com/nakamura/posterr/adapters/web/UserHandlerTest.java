@@ -65,14 +65,15 @@ class UserHandlerTest {
     void getUserProfileWithSucess() {
         final var user = TestMocks.userMock();
         final var userId = 1L;
+        final var userFollowingId = 2L;
 
-        when(getUserProfileUseCase.getUserProfile(userId)).thenReturn(user);
+        when(getUserProfileUseCase.getUserProfile(userId, userFollowingId)).thenReturn(user);
 
-        var result = userHandler.getUserProfile(userId);
+        var result = userHandler.getUserProfile(userId, userFollowingId);
 
         assertThat(List.of(result))
-                .extracting("id", "username", "dateJoined")
-                .contains(tuple(1L, "TEST", OffsetDateTime.MAX));
+                .extracting("id", "username", "dateJoined", "isFollowing")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, false));
     }
 
 }

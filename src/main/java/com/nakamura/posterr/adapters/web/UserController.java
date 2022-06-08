@@ -28,19 +28,19 @@ public class UserController {
 
     private final UserHandler userHandler;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserOutput> getUserProfile(@PathVariable Long userId) {
-        log.info("GET - /v1/user - user {} get user profile {}", userId);
+    @GetMapping("/{userProfileId}")
+    public ResponseEntity<UserOutput> getUserProfile(@PathVariable Long userProfileId) {
+        final var userId = SecurityContextMock.userId;
+        log.info("GET - /v1/user - user {} seeing user profile {}", userId, userProfileId);
 
-        var result = userHandler.getUserProfile(userId);
+        var result = userHandler.getUserProfile(userId, userProfileId);
 
         log.info("GET - /v1/user - Sucess - 200");
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(path = "/following")
-    public ResponseEntity<List<FollowingUserOutput>> getAllFollowingUser() {
-        final var userId = SecurityContextMock.userId;
+    @GetMapping(path = "/following/{userId}")
+    public ResponseEntity<List<FollowingUserOutput>> getAllFollowingUser(@PathVariable Long userId) {
         log.info("GET - /v1/user/following - get all followingUser from userId {}", userId);
 
         var result = userHandler.getAllFollowingUsers(userId);
@@ -49,9 +49,8 @@ public class UserController {
         return ResponseEntity.ok(result);
     }
 
-    @GetMapping(path = "/followed")
-    public ResponseEntity<List<FollowedUserOutput>> getAllFollowedUser() {
-        final var userId = SecurityContextMock.userId;
+    @GetMapping(path = "/followed/{userId}")
+    public ResponseEntity<List<FollowedUserOutput>> getAllFollowedUser(@PathVariable Long userId) {
         log.info("GET - /v1/user/followed - get all followedUser from userId {}", userId);
 
         var result = userHandler.getFollowedUserOutputs(userId);

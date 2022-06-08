@@ -65,10 +65,10 @@ public class TestMocks {
                 .build();
     }
 
-    public static UserEntity userEntityMock() {
+    public static UserEntity userEntityMock(Long id) {
         return UserEntity
                 .builder()
-                .id(1L)
+                .id(id)
                 .username("TEST")
                 .dateJoined(OffsetDateTime.MAX)
                 .build();

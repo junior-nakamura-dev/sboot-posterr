@@ -4,6 +4,6 @@ import com.nakamura.posterr.application.domain.User;
 
 public interface GetUserProfileUseCase {
 
-    User getUserProfile(Long userId);
+    User getUserProfile(Long userId, Long followingUserId);
 
 }

@@ -20,7 +20,8 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Slf4j
-public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedUsersUseCase, FollowUserUseCase, UnfollowUserUseCase, GetUserProfileUseCase {
+public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedUsersUseCase, FollowUserUseCase,
+        UnfollowUserUseCase, GetUserProfileUseCase, GetIfUserIsFollowedUseCase {
 
     private final UserPort userPort;
 
@@ -45,7 +46,7 @@ public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedU
         var followedEntities = userPort.getFollowedUserById(userId);
 
         log.info("GET - /v1/user/followed - UserService - Sucess to return followed users from UserPort ");
-        var followedUsers= followedEntities
+        var followedUsers = followedEntities
                 .stream()
                 .map(FollowedEntity::toDomain)
                 .collect(Collectors.toList());
@@ -71,15 +72,27 @@ public class UserService implements GetAllFollowingUsersUseCase, GetAllFollowedU
     }
 
     @Override
-    public User getUserProfile(Long userId) {
-        log.info("GET - /v1/user - UserService - user {} get user profile {}", userId);
-        final var userEntity= userPort.getUserProfile(userId);
+    public User getUserProfile(Long userId, Long userFollowingId) {
+        log.info("GET - /v1/user - UserService - user {} get user profile {}", userId, userFollowingId);
+        final var userEntity = userPort.getUserProfile(userFollowingId);
 
         log.info("GET - /v1/user - UserService - Sucess to return userEntity");
 
         final var user = userEntity.toDomain();
 
+        user.setFollowing(isFollow(userId, userFollowingId));
+
         return user;
+    }
+
+    @Override
+    public boolean isFollow(Long userId, Long userFollowingId) {
+        log.info("GET - /v1/user - UserService - Verify if user {} follow the user {}", userId, userFollowingId);
+        final var followingEntity = userPort.isFollow(userId, userFollowingId);
+
+        log.info("GET - /v1/user - UserService - Sucess to retrieve from userPort.isFollow");
+
+        return followingEntity.isPresent();
     }
 
 }
