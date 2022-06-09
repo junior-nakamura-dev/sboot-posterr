@@ -19,6 +19,6 @@ and is possible to get the userId on SecurityContext.
 
 1 - Go to /infrastructure/local and run "docker-compose up -d" for up the postgres db
 
-2 - Run on your IDE
+2 - Run on your IDE with java env opts "-Dspring.profiles.active=default"
 
 
