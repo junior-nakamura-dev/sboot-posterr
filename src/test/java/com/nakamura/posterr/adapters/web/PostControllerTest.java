@@ -85,7 +85,7 @@ class PostControllerTest {
         final var userId = 1L;
         final var posts = TestMocks.postMock();
         final Long lastPostId = 100L;
-        final Long userProfileId = 0L;
+        final Long userProfileId = null;
 
         given(postPortMock.getAllPost(userId, offset, size, lastPostId, userProfileId)).willReturn(List.of(posts));
 

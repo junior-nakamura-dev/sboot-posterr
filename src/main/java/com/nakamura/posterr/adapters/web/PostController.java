@@ -46,12 +46,12 @@ public class PostController {
                                    @RequestParam(defaultValue = "5") int chunk,
                                    @RequestParam(defaultValue = "true") boolean seeingAll,
                                    @RequestParam(defaultValue = "0") long lastPostIdSeen,
-                                   @RequestParam(defaultValue = "0") long userProfileId) {
+                                   @RequestParam(required = false) Long userProfileId) {
         final var userId = SecurityContextMock.userId;
         log.info("GET - /v1/post - Start process to get list of posts to user");
 
         List<PostOutput> postOutputs;
-        if (seeingAll || (userProfileId != 0)) {
+        if (seeingAll) {
             log.info("GET - /v1/post - Choose flow to retrieve post from wherever user");
             postOutputs = postHandler.getPosts(userId, page, chunk, true, lastPostIdSeen, userProfileId);
         } else {
