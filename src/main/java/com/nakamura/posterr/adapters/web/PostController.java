@@ -6,6 +6,7 @@ import com.nakamura.posterr.adapters.web.handler.PostHandler;
 import com.nakamura.posterr.application.exception.LimitRangePostDayException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,8 @@ public class PostController {
             return ResponseEntity.noContent().build();
         } catch (LimitRangePostDayException businessException) {
             throw new ResponseStatusException(businessException.getExceptionStatusCode(), businessException.getExceptionDescription());
+        } catch (Exception exception) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, exception.getMessage());
         }
     }
 

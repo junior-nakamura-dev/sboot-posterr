@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -74,12 +73,12 @@ public class UserController {
     }
 
     @DeleteMapping(path = "/unfollow/{userFollowedId}")
-    public ResponseEntity unfollowUser(@PathVariable @NotNull Long userFollowedId) {
+    public ResponseEntity unfollowUser(@PathVariable Long userFollowedId) {
         try {
             final var userId = SecurityContextMock.userId;
             log.info("DELETE - /v1/user/unfollow - Start process to follow user");
 
-            userHandler.unfollowUser(userId, userFollowedId);
+            userHandler.unfollowUser(userId, Long.valueOf(userFollowedId));
 
             log.info("POST - /v1/user/follow - Sucess - 204", userId);
             return ResponseEntity.noContent().build();

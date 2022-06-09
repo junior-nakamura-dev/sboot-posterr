@@ -16,5 +16,4 @@ public enum ExceptionMessage {
     private HttpStatus httpCode;
 
 
-
 }
