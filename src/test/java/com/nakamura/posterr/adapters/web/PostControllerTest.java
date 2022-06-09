@@ -85,11 +85,33 @@ class PostControllerTest {
         final var userId = 1L;
         final var posts = TestMocks.postMock();
         final Long lastPostId = 100L;
-        final Long userProfileId = null;
 
-        given(postPortMock.getAllPost(userId, offset, size, lastPostId, userProfileId)).willReturn(List.of(posts));
+        given(postPortMock.getAllPost(userId, offset, size, lastPostId)).willReturn(List.of(posts));
 
         mockMvc.perform(get("/v1/post?page=1&size=5&lastPostIdSeen=100")
+                .accept(APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[0].post", is("TEST")))
+                .andExpect(jsonPath("$[0].userId", is(1)))
+                .andExpect(jsonPath("$[0].dateCreated", is(String.valueOf(OffsetDateTime.MAX))));
+    }
+
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from wherever user THEN retrieve a list of post WITH sucess")
+    @Test
+    void getAllPostFromUserProfileWithSucess() throws Exception {
+        final var offset = 5;
+        final var size = 5;
+        final var userId = 1L;
+        final var posts = TestMocks.postMock();
+        final Long lastPostId = 100L;
+        final Long userProfileId = 2L;
+
+        given(postPortMock.getAllPostFromUserProfile(userId, offset, size, lastPostId, userProfileId)).willReturn(List.of(posts));
+
+        mockMvc.perform(get("/v1/post?page=1&size=5&lastPostIdSeen=100&userProfileId=2")
                 .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -112,29 +134,6 @@ class PostControllerTest {
         given(postPortMock.getAllPostFromUserFollowed(userId, offset, size, lastPostId)).willReturn(List.of(posts));
 
         mockMvc.perform(get("/v1/post?page=1&size=5&seeingAll=false&lastPostIdSeen=100")
-                .accept(APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].id", is(1)))
-                .andExpect(jsonPath("$[0].post", is("TEST")))
-                .andExpect(jsonPath("$[0].userId", is(1)))
-                .andExpect(jsonPath("$[0].dateCreated", is(String.valueOf(OffsetDateTime.MAX))));
-    }
-
-    @DisplayName("GIVEN a page number and userId WHEN User request posts from user THEN retrieve a list of post WITH sucess")
-    @Test
-    void getAllPostFromUser() throws Exception {
-        final var offset = 5;
-        final var size = 5;
-        final var userId = 1L;
-        final var userProfileId = 2L;
-        final var posts = TestMocks.postMock();
-        final Long lastPostId = 100L;
-
-        given(postPortMock.getAllPost(userId, offset, size, lastPostId, userProfileId)).willReturn(List.of(posts));
-
-        mockMvc.perform(get("/v1/post?page=1&size=5&lastPostIdSeen=100&userProfileId=2")
                 .accept(APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())

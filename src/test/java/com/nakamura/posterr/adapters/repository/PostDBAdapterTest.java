@@ -57,11 +57,31 @@ class PostDBAdapterTest {
         final var userId = 1L;
         final var size = 5;
         final Long lastPostId = null;
-        final var userProfileId = 0L;
+        final Long userProfileId = null;
 
         when(postRepositoryMock.getAllPost(offset, size, lastPostId, userProfileId)).thenReturn(List.of(postEntity));
 
-        final var result = postDBAdapter.getAllPost(userId, offset, size, lastPostId, userProfileId);
+        final var result = postDBAdapter.getAllPost(userId, offset, size, lastPostId);
+
+        assertThat(result)
+                .hasSize(1)
+                .extracting("id", "post", "dateCreated", "userId")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L));
+    }
+
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from user profile THEN retrieve a list of post WITH sucess")
+    @Test
+    void getAllPostFromUserProfile() {
+        final var postEntity = TestMocks.postEntityMock();
+        final var offset = 5;
+        final var userId = 1L;
+        final var size = 5;
+        final Long lastPostId = null;
+        final var userProfileId = 2L;
+
+        when(postRepositoryMock.getAllPost(offset, size, lastPostId, userProfileId)).thenReturn(List.of(postEntity));
+
+        final var result = postDBAdapter.getAllPostFromUserProfile(userId, offset, size, lastPostId, userProfileId);
 
         assertThat(result)
                 .hasSize(1)

@@ -39,10 +39,22 @@ public class PostDBAdapter implements PostPort {
     }
 
     @Override
-    public List<Post> getAllPost(Long userId, int offset, int chunk, Long lastPostId, Long userProfileId) {
-        log.info("GET - /v1/post - PostDBAdapter - Get all post pagination for user {} and offset {} and chunk {} and lastPostId {}", userId, offset, chunk, lastPostId);
+    public List<Post> getAllPostFromUserProfile(Long userId, int offset, int chunk, Long lastPostId, Long userProfileId) {
+        log.info("GET - /v1/post - PostDBAdapter - Get all post pagination from user profile {} and offset {} and chunk {} and lastPostId {}", userProfileId, offset, chunk, lastPostId);
 
         final var postEntities = postRepository.getAllPost(offset, chunk, lastPostId, userProfileId);
+        log.info("GET - /v1/post - PostDBAdapter - Sucess to retrieve postEntites from postRepository.getAllPost");
+
+        final var posts = postEntities.stream().map(PostEntity::toDomain).collect(Collectors.toList());
+        log.info("GET - /v1/post - PostDBAdapter - Sucess to mapping to Post domain");
+        return posts;
+    }
+
+    @Override
+    public List<Post> getAllPost(Long userId, int offset, int chunk, Long lastPostId) {
+        log.info("GET - /v1/post - PostDBAdapter - Get all post pagination for user {} and offset {} and chunk {} and lastPostId {}", userId, offset, chunk, lastPostId);
+
+        final var postEntities = postRepository.getAllPost(offset, chunk, lastPostId, null);
         log.info("GET - /v1/post - PostDBAdapter - Sucess to retrieve postEntites from postRepository.getAllPost");
 
         final var posts = postEntities.stream().map(PostEntity::toDomain).collect(Collectors.toList());

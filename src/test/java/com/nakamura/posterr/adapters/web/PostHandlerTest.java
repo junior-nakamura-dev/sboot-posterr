@@ -58,11 +58,29 @@ class PostHandlerTest {
         final var userId = 1L;
         final var chunk = 5;
         final var lastPostId = 1L;
-        final var userProfileId = 0L;
 
-        when(getAllPostUseCase.getAllPost(userId, OFF_SET_RANGE, chunk, lastPostId, userProfileId)).thenReturn(List.of(post));
+        when(getAllPostUseCase.getAllPost(userId, OFF_SET_RANGE, chunk, lastPostId)).thenReturn(List.of(post));
 
-        var result = postHandler.getPosts(userId, 1, chunk, true, lastPostId, userProfileId);
+        var result = postHandler.getAllPosts(userId, 1, chunk, true, lastPostId);
+
+        assertThat(result)
+                .hasSize(1)
+                .extracting("id", "post", "dateCreated", "userId", "postOriginalId")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L, null));
+    }
+
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from user profile THEN retrieve a list of post WITH sucess")
+    @Test
+    void getAllPostFromUserProfileWithSucess() {
+        final var post = TestMocks.postMock();
+        final var userId = 1L;
+        final var chunk = 5;
+        final var lastPostId = 1L;
+        final var userProfileId = 2L;
+
+        when(getAllPostUseCase.getAllPostFromUserProfile(userId, OFF_SET_RANGE, chunk, lastPostId, userProfileId)).thenReturn(List.of(post));
+
+        var result = postHandler.getPostsFromUserProfile(userId, 1, chunk, true, lastPostId, userProfileId);
 
         assertThat(result)
                 .hasSize(1)
@@ -80,7 +98,7 @@ class PostHandlerTest {
 
         when(getAllPostUseCase.getAllPostFromUserFollowed(userId, OFF_SET_RANGE, chunk, lastPostId)).thenReturn(List.of(post));
 
-        var result = postHandler.getPosts(userId, 1, chunk, lastPostId);
+        var result = postHandler.getPostsFromUsersFollowed(userId, 1, chunk, lastPostId);
 
         assertThat(result)
                 .hasSize(1)

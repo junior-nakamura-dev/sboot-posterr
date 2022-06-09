@@ -46,11 +46,30 @@ class PostServiceTest {
         final var offset = 1;
         final var chunk = 5;
         final var lastPostId = 1L;
-        final var userProfileId = 0L;
 
-        when(postPortMock.getAllPost(userId, offset, chunk, lastPostId, userProfileId)).thenReturn(List.of(post));
+        when(postPortMock.getAllPost(userId, offset, chunk, lastPostId)).thenReturn(List.of(post));
 
-        final var result = postService.getAllPost(userId, offset, chunk, lastPostId, userProfileId);
+        final var result = postService.getAllPost(userId, offset, chunk, lastPostId);
+
+        assertThat(result)
+                .hasSize(1)
+                .extracting("id", "post", "dateCreated", "userId", "postOriginalId")
+                .contains(tuple(1L, "TEST", OffsetDateTime.MAX, 1L, null));
+    }
+
+    @DisplayName("GIVEN a page number and userId WHEN User request posts from user profile  THEN retrieve a list of post WITH sucess")
+    @Test
+    void getAllPostFromUserProfile() {
+        final var post = TestMocks.postMock();
+        final var userId = 1L;
+        final var offset = 1;
+        final var chunk = 5;
+        final var lastPostId = 1L;
+        final var userProfileId = 2L;
+
+        when(postPortMock.getAllPostFromUserProfile(userId, offset, chunk, lastPostId, userProfileId)).thenReturn(List.of(post));
+
+        final var result = postService.getAllPostFromUserProfile(userId, offset, chunk, lastPostId, userProfileId);
 
         assertThat(result)
                 .hasSize(1)

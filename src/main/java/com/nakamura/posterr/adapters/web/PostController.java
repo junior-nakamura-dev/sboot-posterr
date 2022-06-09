@@ -44,19 +44,23 @@ public class PostController {
     @GetMapping
     public ResponseEntity getPosts(@RequestParam(defaultValue = "0") int page,
                                    @RequestParam(defaultValue = "5") int chunk,
-                                   @RequestParam(defaultValue = "true") boolean seeingAll,
-                                   @RequestParam(defaultValue = "0") long lastPostIdSeen,
+                                   @RequestParam(defaultValue = "true") Boolean seeingAll,
+                                   @RequestParam(required = false) Long lastPostIdSeen,
                                    @RequestParam(required = false) Long userProfileId) {
         final var userId = SecurityContextMock.userId;
         log.info("GET - /v1/post - Start process to get list of posts to user");
 
         List<PostOutput> postOutputs;
-        if (seeingAll) {
+        if (userProfileId != null) {
+            log.info("GET - /v1/post - Choose flow to retrieve post from user profile {}", userProfileId);
+            postOutputs = postHandler.getPostsFromUserProfile(userId, page, chunk, true, lastPostIdSeen, userProfileId);
+        }
+        else if (seeingAll) {
             log.info("GET - /v1/post - Choose flow to retrieve post from wherever user");
-            postOutputs = postHandler.getPosts(userId, page, chunk, true, lastPostIdSeen, userProfileId);
+            postOutputs = postHandler.getAllPosts(userId, page, chunk, true, lastPostIdSeen);
         } else {
             log.info("GET - /v1/post - Choose flow to retrieve post from user followed");
-            postOutputs = postHandler.getPosts(userId, page, chunk, lastPostIdSeen);
+            postOutputs = postHandler.getPostsFromUsersFollowed(userId, page, chunk, lastPostIdSeen);
         }
 
         log.info("GET - /v1/post - Sucess - 200", userId);

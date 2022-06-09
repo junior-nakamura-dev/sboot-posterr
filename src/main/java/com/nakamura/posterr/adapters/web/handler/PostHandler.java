@@ -36,10 +36,10 @@ public class PostHandler {
         log.info("POST - /v1/post - PostHandler - Sucess to follow an user in CreatePostUseCase");
     }
 
-    public List<PostOutput> getPosts(Long userId, int page, int chunk, boolean seeingAll, Long lastPostId, Long userProfileId) {
-        log.info("GET - /v1/post - PostHandler - Get all post to user {} page {} chunk {} seeingAll {}", userId, page, chunk, seeingAll);
+    public List<PostOutput> getPostsFromUserProfile(Long userId, int page, int chunk, boolean seeingAll, Long lastPostId, Long userProfileId) {
+        log.info("GET - /v1/post - PostHandler - Get all post from user profile {} page {} chunk {} seeingAll {}", userProfileId, page, chunk, seeingAll);
 
-        var posts = getAllPostUseCase.getAllPost(userId, (page * OFFSET_RANGE), chunk, lastPostId, userProfileId);
+        var posts = getAllPostUseCase.getAllPostFromUserProfile(userId, (page * OFFSET_RANGE), chunk, lastPostId, userProfileId);
         log.info("GET - /v1/post - PostHandler - Sucess to retrieve posts from getAllPostUseCase");
 
         var postsOutput = posts.stream().map(PostOutput::fromDomain).collect(Collectors.toList());
@@ -47,7 +47,18 @@ public class PostHandler {
         return postsOutput;
     }
 
-    public List<PostOutput> getPosts(Long userId, int page, int chunk, Long lastPostId) {
+    public List<PostOutput> getAllPosts(Long userId, int page, int chunk, boolean seeingAll, Long lastPostId) {
+        log.info("GET - /v1/post - PostHandler - Get all post to user {} page {} chunk {} seeingAll {}", userId, page, chunk, seeingAll);
+
+        var posts = getAllPostUseCase.getAllPost(userId, (page * OFFSET_RANGE), chunk, lastPostId);
+        log.info("GET - /v1/post - PostHandler - Sucess to retrieve posts from getAllPostUseCase");
+
+        var postsOutput = posts.stream().map(PostOutput::fromDomain).collect(Collectors.toList());
+        log.info("GET - /v1/post - PostHandler - Sucess to mapping to PostOutput");
+        return postsOutput;
+    }
+
+    public List<PostOutput> getPostsFromUsersFollowed(Long userId, int page, int chunk, Long lastPostId) {
         log.info("GET - /v1/post - PostHandler - Get post to user {} from user followed page {} chunk {} ", userId, page, chunk);
 
         var posts = getAllPostUseCase.getAllPostFromUserFollowed(userId, (page * OFFSET_RANGE), chunk, lastPostId);
