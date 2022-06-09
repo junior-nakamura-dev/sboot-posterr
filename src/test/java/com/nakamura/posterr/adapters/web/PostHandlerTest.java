@@ -58,10 +58,11 @@ class PostHandlerTest {
         final var userId = 1L;
         final var chunk = 5;
         final var lastPostId = 1L;
+        final var userProfileId = 0L;
 
-        when(getAllPostUseCase.getAllPost(userId, OFF_SET_RANGE, chunk, lastPostId)).thenReturn(List.of(post));
+        when(getAllPostUseCase.getAllPost(userId, OFF_SET_RANGE, chunk, lastPostId, userProfileId)).thenReturn(List.of(post));
 
-        var result = postHandler.getPosts(userId, 1, chunk, true, lastPostId);
+        var result = postHandler.getPosts(userId, 1, chunk, true, lastPostId, userProfileId);
 
         assertThat(result)
                 .hasSize(1)

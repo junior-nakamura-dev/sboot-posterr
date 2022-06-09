@@ -28,9 +28,9 @@ public class AllPostService implements CreatePostUseCase, GetAllPostUseCase {
     }
 
     @Override
-    public List<Post> getAllPost(Long userId, int offset ,int size, Long lastPostId) {
+    public List<Post> getAllPost(Long userId, int offset, int size, Long lastPostId, Long userProfileId) {
         log.info("GET - /v1/post - PostService - Get all post to userId {} offset {} size {} lastPostId {}", userId, offset, size, lastPostId);
-        final var posts = postPort.getAllPost(userId, offset, size, lastPostId);
+        final var posts = postPort.getAllPost(userId, offset, size, lastPostId, userProfileId);
         log.info("GET - /v1/post - PostService - Sucess to retrieve posts");
         return posts;
     }

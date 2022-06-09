@@ -57,10 +57,11 @@ class PostDBAdapterTest {
         final var userId = 1L;
         final var size = 5;
         final Long lastPostId = null;
+        final var userProfileId = 0L;
 
-        when(postRepositoryMock.getAllPost(offset, size, lastPostId)).thenReturn(List.of(postEntity));
+        when(postRepositoryMock.getAllPost(offset, size, lastPostId, userProfileId)).thenReturn(List.of(postEntity));
 
-        final var result = postDBAdapter.getAllPost(userId, offset, size, lastPostId);
+        final var result = postDBAdapter.getAllPost(userId, offset, size, lastPostId, userProfileId);
 
         assertThat(result)
                 .hasSize(1)

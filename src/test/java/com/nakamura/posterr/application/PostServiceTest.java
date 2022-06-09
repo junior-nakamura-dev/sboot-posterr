@@ -46,10 +46,11 @@ class PostServiceTest {
         final var offset = 1;
         final var chunk = 5;
         final var lastPostId = 1L;
+        final var userProfileId = 0L;
 
-        when(postPortMock.getAllPost(userId, offset, chunk, lastPostId)).thenReturn(List.of(post));
+        when(postPortMock.getAllPost(userId, offset, chunk, lastPostId, userProfileId)).thenReturn(List.of(post));
 
-        final var result = postService.getAllPost(userId, offset, chunk, lastPostId);
+        final var result = postService.getAllPost(userId, offset, chunk, lastPostId, userProfileId);
 
         assertThat(result)
                 .hasSize(1)

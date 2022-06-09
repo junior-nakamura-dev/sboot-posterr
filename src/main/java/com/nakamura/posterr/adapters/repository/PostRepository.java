@@ -24,7 +24,7 @@ public interface PostRepository {
 
     @SqlQuery
     @RegisterBeanMapper(PostEntity.class)
-    List<PostEntity> getAllPost(int offset, int chunk, Long lastPostId);
+    List<PostEntity> getAllPost(int offset, int chunk, Long lastPostId, Long userProfileId);
 
     @SqlQuery
     @RegisterBeanMapper(PostEntity.class)

@@ -36,10 +36,10 @@ public class PostHandler {
         log.info("POST - /v1/post - PostHandler - Sucess to follow an user in CreatePostUseCase");
     }
 
-    public List<PostOutput> getPosts(Long userId, int page, int chunk, boolean seeingAll, Long lastPostId) {
+    public List<PostOutput> getPosts(Long userId, int page, int chunk, boolean seeingAll, Long lastPostId, Long userProfileId) {
         log.info("GET - /v1/post - PostHandler - Get all post to user {} page {} chunk {} seeingAll {}", userId, page, chunk, seeingAll);
 
-        var posts = getAllPostUseCase.getAllPost(userId, (page * OFFSET_RANGE), chunk, lastPostId);
+        var posts = getAllPostUseCase.getAllPost(userId, (page * OFFSET_RANGE), chunk, lastPostId, userProfileId);
         log.info("GET - /v1/post - PostHandler - Sucess to retrieve posts from getAllPostUseCase");
 
         var postsOutput = posts.stream().map(PostOutput::fromDomain).collect(Collectors.toList());

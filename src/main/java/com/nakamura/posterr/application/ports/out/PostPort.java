@@ -9,7 +9,7 @@ public interface PostPort {
 
     void createPost(Post post) throws LimitRangePostDayException;
 
-    List<Post> getAllPost(Long userId, int offset, int size, Long lastPostId);
+    List<Post> getAllPost(Long userId, int offset, int size, Long lastPostId, Long userProfileId);
 
     List<Post> getAllPostFromUserFollowed(Long userId, int offset, int size, Long lastPostId);
 
